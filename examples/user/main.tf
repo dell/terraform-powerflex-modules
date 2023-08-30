@@ -11,8 +11,8 @@ module "usercreation" {
   newUserName = "user"
   userRole = "Monitor"
   userPassword = "Password1234"
-  mdmusername = "root"
-  mdmpassword = "Password"
-  mdmhost = "10.x.x.x"
+  mdmUserName = "root"
+  mdmPassword = "Password"
+  mdmHost = "10.x.x.x"
   newPassword = "Password123"
 }
