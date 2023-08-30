@@ -3,7 +3,7 @@
 terraform {
   required_providers {
     powerflex = {
-      version = "1.2.0"
+      version = "1.1.0"
       source  = "registry.terraform.io/dell/powerflex"
     }
     null = {  

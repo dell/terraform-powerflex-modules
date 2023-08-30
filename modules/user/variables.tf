@@ -29,18 +29,18 @@ variable "userPassword" {
   description = "Password of the new user."
 }
 
-variable "mdmusername" {
+variable "mdmUserName" {
   type        = string
   description = "Primary MDM username required for connecting to the Primary MDM."
 }
 
-variable "mdmpassword" {
+variable "mdmPassword" {
   type        = string
   description = "Primary MDM password required for connecting to the Primary MDM."
 }
 
 
-variable "mdmhost" {
+variable "mdmHost" {
   type        = string
   description = "Primary MDM host required for connecting to the Primary MDM."
 }
