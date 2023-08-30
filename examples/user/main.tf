@@ -14,5 +14,5 @@ module "usercreation" {
   mdmusername = "root"
   mdmpassword = "Password"
   mdmhost = "10.x.x.x"
-  changedpassword = "Password123"
+  newPassword = "Password123"
 }

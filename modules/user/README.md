@@ -16,19 +16,22 @@ limitations under the License.
 -->
 # user
 
-Manages user on a PowerFlex array.
+Manages user on a PowerFlex array. User reource can be used to create, update role and delete the user from the PowerFlex array. Once the user is created, it is mandatory to change the password when it's logged in for the first time. The intent of this user submodule is to provide the detailed information on how to achieve this changing of password during it's first login.
 
 ## Schema
 
 ### Inputs
 
-- `name` (String) The name of the user.
-- `password` (String) Password of the user.
-- `role` (String) The role of the user. Accepted values are 'Administrator', 'Monitor', 'Configure', 'Security', 'FrontendConfig', 'BackendConfig'.
-- `user` (String) Primary MDM user for connection
-- `password` (String) Primary MDM password for connection
-- `host` (String) Primary MDM host for connection
-- `changedpassword` (String) New password required for the first login
+- `username` (String) Stores the username of PowerFlex host.
+- `password` (String) Stores the password of PowerFlex host.
+- `endpoint` (String) Stores the endpoint of PowerFlex host.
+- `newUserName` (String) The name of the user.
+- `userPassword` (String) Password of the user.
+- `userRole` (String) The role of the user. Accepted values are 'Administrator', 'Monitor', 'Configure', 'Security', 'FrontendConfig', 'BackendConfig'.
+- `mdmusername` (String) Primary MDM username required for connecting to the Primary MDM.
+- `mdmpassword` (String) Primary MDM password required for connecting to the Primary MDM.
+- `mdmhost` (String) Primary MDM host required for connecting to the Primary MDM.
+- `newPassword` (String) New password required for the first login
 
 ### Outputs
 

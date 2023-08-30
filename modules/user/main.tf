@@ -33,6 +33,6 @@ resource "null_resource" "provision" {
       }
     provisioner "remote-exec"{         
       inline = [ "scli --login --username ${powerflex_user.newUser.name}  --password ${powerflex_user.newUser.password} ",  
-      "scli --set_password --old_password ${powerflex_user.newUser.password} --new_password ${var.changedpassword} "] 
+      "scli --set_password --old_password ${powerflex_user.newUser.password} --new_password ${var.newPassword} "] 
     }
 }
