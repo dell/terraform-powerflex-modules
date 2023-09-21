@@ -16,7 +16,7 @@ limitations under the License.
 -->
 # user
 
-Manages user on a PowerFlex array. User reource can be used to create, update role and delete the user from the PowerFlex array. Once the user is created, it is mandatory to change the password when it's logged in for the first time. The intent of this user submodule is to change the password during it's first login.
+Manages user on a PowerFlex array. User resource can be used to create, update role and delete the user from the PowerFlex array. Once the user is created, it is mandatory to change the password when it's logged in for the first time. The intent of this user submodule is to change the password during it's first login.
 
 ## Schema
 
