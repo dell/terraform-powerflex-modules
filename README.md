@@ -14,14 +14,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-# Terraform Provider for Dell Technologies PowerFlex
+# Terraform Modules for Dell Technologies PowerFlex
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](about/CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-MPL_2.0-blue.svg)](LICENSE)
 
-The Terraform Modules for Dell Technologies (Dell) PowerFlex hosts terraform submodules 
+Terraform modules package multiple resources together, allowing for efficient, modular design. They simplify code management and can be easily shared across different projects.For more information refer this [link](https://developer.hashicorp.com/terraform/language/modules) 
 
-The Terraform User Sub-module can be used to manage users for changing their password during the first login.
+In this release, we are introducing Terraform modules for the purpose of user management.
 
 ## Table of contents
 
@@ -34,13 +34,13 @@ The Terraform User Sub-module can be used to manage users for changing their pas
 * [Security](https://github.com/dell/dell-terraform-providers/blob/main/docs/SECURITY.md)
 * [License](#license)
 * [Prerequisites](#prerequisites)
-* [List of Submodules in Terraform Provider for Dell PowerFlex](#list-of-submodules-in-terraform-provider-for-dell-powerflex)
+* [List of Submodules in Terraform Modules for Dell PowerFlex](#list-of-submodules-in-terraform-modules-for-dell-powerflex)
 
 ## Support
-For any Terraform Provider for Dell PowerFlex issues, questions or feedback, please follow our [support process](https://github.com/dell/dell-terraform-providers/blob/main/docs/SUPPORT.md)
+For any Terraform Modules for Dell PowerFlex issues, questions or feedback, please follow our [support process](https://github.com/dell/dell-terraform-providers/blob/main/docs/SUPPORT.md)
 
 ## License
-The Terraform Provider for Dell PowerFlex is released and licensed under the MPL-2.0 license. See [LICENSE](LICENSE) for the full terms.
+The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-2.0 license. See [LICENSE](LICENSE) for the full terms.
 
 ## Prerequisites
 
@@ -48,5 +48,5 @@ The Terraform Provider for Dell PowerFlex is released and licensed under the MPL
 |---------------------|-----------------------|-------|--------------------|--------------------------|
 | v1.2.0 | 3.6 | ubuntu22.04 <br> rhel8.x <br> rhel9.x | 1.3.x <br> 1.5.x <br> | 1.20.x
 
-## List of Submodules in Terraform Provider for Dell PowerFlex
+## List of Submodules in Terraform Modules for Dell PowerFlex
   * [User](modules/user/README.md)
