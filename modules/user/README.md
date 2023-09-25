@@ -39,3 +39,16 @@ Manages user on a PowerFlex array. User resource can be used to create, update r
 - `new_username` (String) Name of the newly created user
 - `new_user_role` (String) Role of the newly created user
 
+### Prerequisites
+
+User module can only be used with terraform provider powerflex v1.2.0
+
+### Usage
+
+Please refer the User example [here](../../examples/user/main.tf)
+After providing proper values to all the attributes, then in that workspace, run
+
+```
+terraform init
+terraform apply
+```
