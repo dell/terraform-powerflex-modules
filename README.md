@@ -19,7 +19,7 @@ limitations under the License.
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](about/CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-MPL_2.0-blue.svg)](LICENSE)
 
-Terraform modules package multiple resources together, allowing for efficient, modular design. They simplify code management and can be easily shared across different projects.For more information refer this [link](https://developer.hashicorp.com/terraform/language/modules) 
+Terraform modules package multiple resources together, allowing for efficient, modular design. They simplify code management and can be easily shared across different projects. For more information refer this [link](https://developer.hashicorp.com/terraform/language/modules) 
 
 In this release, we are introducing Terraform modules for the purpose of user management.
 
