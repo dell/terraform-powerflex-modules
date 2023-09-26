@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Dell Inc., or its subsidiaries. All Rights Reserved.
+Copyright (c) 2023 Dell Inc., or its subsidiaries. All Rights Reserved.
 
 Licensed under the Mozilla Public License Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 -->
 # user
 
-Manages user on a PowerFlex array. User reource can be used to create, update role and delete the user from the PowerFlex array. Once the user is created, it is mandatory to change the password when it's logged in for the first time. The intent of this user submodule is to change the password during it's first login.
+Manages user on a PowerFlex array. User resource can be used to create, update role and delete the user from the PowerFlex array. Once the user is created, it is mandatory to change the password when it's logged in for the first time. The intent of this user submodule is to change the password during it's first login.
 
 ## Schema
 
@@ -39,3 +39,16 @@ Manages user on a PowerFlex array. User reource can be used to create, update ro
 - `new_username` (String) Name of the newly created user
 - `new_user_role` (String) Role of the newly created user
 
+### Prerequisites
+
+User module can only be used with terraform provider powerflex v1.2.0
+
+### Usage
+
+Please refer the User example [here](../../examples/user/main.tf)
+After providing proper values to all the attributes, then in that workspace, run
+
+```
+terraform init
+terraform apply
+```
