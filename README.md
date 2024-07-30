@@ -50,3 +50,4 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
 
 ## List of Submodules in Terraform Modules for Dell PowerFlex
   * [User](modules/user/README.md)
+  * [SDC](modules/sdc_host_linux/README.md)
