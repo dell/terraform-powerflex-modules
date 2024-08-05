@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# SDC Host Module
+# SDC Host Module for Linux
 
 This Terraform module installs the SDC package on a remote Linux host using the `powerflex_sdc_host` resource.
 
@@ -42,7 +42,7 @@ This Terraform module installs the SDC package on a remote Linux host using the 
 
 ### Prerequisites
 
-SDC Host module can only be used with terraform provider PowerFlex v1.5.1 and above.
+SDC Host module can only be used with terraform provider PowerFlex v1.6.0 and above.
 
 For SELinux configration, refer to "Configure the SDC (scini) driver for SELinux" section in PowerFlex Install/Upgrade guide.
 
