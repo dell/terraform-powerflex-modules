@@ -17,41 +17,41 @@ limitations under the License.
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.1 |
+| <a name="requirement_powerflex"></a> [powerflex](#requirement\_powerflex) | 1.2.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_powerflex"></a> [powerflex](#provider\_powerflex) | >= 1.2.0 |
-| <a name="provider_null"></a> [null](#provider\_null) |  3.2.1 |
+No providers.
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_user"></a> [user](#module\user) | ../../modules/user | n/a |
+| <a name="module_user_creation"></a> [user\_creation](#module\_user\_creation) | ../../modules/user | n/a |
 
 ## Resources
 
 No resources.
 
-### Inputs
+## Inputs
 
-- `username` (String) Stores the username of PowerFlex host.
-- `password` (String) Stores the password of PowerFlex host.
-- `endpoint` (String) Stores the endpoint of PowerFlex host.
-- `newUserName` (String) The name of the user.
-- `userPassword` (String) Password of the user.
-- `userRole` (String) The role of the user. Accepted values are 'Administrator', 'Monitor', 'Configure', 'Security', 'FrontendConfig', 'BackendConfig'.
-- `mdmUserName` (String) Primary MDM username required for connecting to the Primary MDM.
-- `mdmPassword` (String) Primary MDM password required for connecting to the Primary MDM.
-- `mdmHost` (String) Primary MDM host required for connecting to the Primary MDM.
-- `newPassword` (String) New password required for the first login
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_endpoint"></a> [endpoint](#input\_endpoint) | Stores the endpoint of PowerFlex host. eg: https://10.1.1.1:443, here 443 is port where API requests are getting accepted | `string` | n/a | yes |
+| <a name="input_mdmHost"></a> [mdmHost](#input\_mdmHost) | Primary MDM host required for connecting to the Primary MDM. | `string` | n/a | yes |
+| <a name="input_mdmPassword"></a> [mdmPassword](#input\_mdmPassword) | Primary MDM password required for connecting to the Primary MDM. | `string` | n/a | yes |
+| <a name="input_mdmUserName"></a> [mdmUserName](#input\_mdmUserName) | Primary MDM username required for connecting to the Primary MDM. | `string` | n/a | yes |
+| <a name="input_newPassword"></a> [newPassword](#input\_newPassword) | New password required for the first login. | `string` | n/a | yes |
+| <a name="input_newUserName"></a> [newUserName](#input\_newUserName) | Name of the new user. | `string` | n/a | yes |
+| <a name="input_password"></a> [password](#input\_password) | Stores the password of PowerFlex host. | `string` | n/a | yes |
+| <a name="input_userPassword"></a> [userPassword](#input\_userPassword) | Password of the new user. | `string` | n/a | yes |
+| <a name="input_userRole"></a> [userRole](#input\_userRole) | Role of the new user. | `string` | n/a | yes |
+| <a name="input_username"></a> [username](#input\_username) | Stores the username of PowerFlex host. | `string` | n/a | yes |
 
-### Outputs
+## Outputs
 
-- `new_user_id` (String) ID of the newly created user
-- `new_username` (String) Name of the newly created user
-- `new_user_role` (String) Role of the newly created user
+No outputs.
 <!-- END_TF_DOCS -->
