@@ -46,8 +46,9 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
 
 | **Terraform Provider** | **PowerFlex/VxFlex OS Version** | **OS** | **Terraform** | **Golang** |
 |---------------------|-----------------------|-------|--------------------|--------------------------|
-| >= v1.2.0 | 3.6 | ubuntu22.04 <br> rhel9.x | >= 1.5 | 1.22.x
+| >= v1.5.0 | >= 3.6 | ubuntu22.04 <br> rhel9.x | >= 1.5 | 1.22.x
 
 ## List of Submodules in Terraform Modules for Dell PowerFlex
   * [User](modules/user/README.md)
-  * [SDC](modules/sdc_host_linux/README.md)
+  * [SDC Linux](modules/sdc_host_linux/README.md)
+  * [SDC ESXi](modules/sdc_host_esxi/README.md)

@@ -1,4 +1,3 @@
-
 # /*
 # Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
@@ -16,24 +15,18 @@
 # limitations under the License.
 # */
 terraform {
-  required_providers {
-    powerflex = {
-      version = "1.2.0"
-      source  = "registry.terraform.io/dell/powerflex"
-    }
-    null = {  
-      source = "hashicorp/null"  
-      version = "3.2.1"  
-    }
-  }
-    
-}
+   required_providers {
+     powerflex = {
+       version = ">=1.6.0"
+       source  = "registry.terraform.io/dell/powerflex"
+     }
+   }
+ }
+
 provider "powerflex" {
-  username = var.username
-  password = var.password
-  endpoint = var.endpoint
+  username = var.powerflex_config.username
+  password = var.powerflex_config.password
+  endpoint = var.powerflex_config.endpoint
   insecure = true
   timeout  = 120
 }
-
-provider "null" {}

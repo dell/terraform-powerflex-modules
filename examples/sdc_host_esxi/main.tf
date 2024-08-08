@@ -1,4 +1,3 @@
-
 # /*
 # Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
@@ -15,25 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # */
-terraform {
-  required_providers {
-    powerflex = {
-      version = "1.2.0"
-      source  = "registry.terraform.io/dell/powerflex"
-    }
-    null = {  
-      source = "hashicorp/null"  
-      version = "3.2.1"  
-    }
-  }
-    
-}
-provider "powerflex" {
-  username = var.username
-  password = var.password
-  endpoint = var.endpoint
-  insecure = true
-  timeout  = 120
+
+##############
+# PowerFlex SDC
+##############
+
+module "sdc_host_esxi" {
+  # Here source points to the sdc_host_esxi submodule in the modules folder. You can change the value to point it according to your usecase. 
+  source = "../../modules/sdc_host_esxi"
+  
+  ip = var.ip
+  remote_host = var.remote_host
+  sdc_pkg = var.sdc_pkg
+  mdm_ips = var.mdm_ips
 }
 
-provider "null" {}
