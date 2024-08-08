@@ -20,7 +20,7 @@
 # PowerFlex SDC
 ##############
 
-module "sdchostlinux" {
+module "sdc_host_linux" {
   # Here source points to the sdc_host_linux submodule in the modules folder. You can change the value to point it according to your usecase. 
   source = "../../modules/sdc_host_linux"
 

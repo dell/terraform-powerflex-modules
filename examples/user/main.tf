@@ -2,7 +2,7 @@
 # PowerFlex User
 ##############
 
-module "usercreation" {
+module "user_creation" {
   # Here source points to the user submodule in the modules folder. You can change the value to point it according to your usecase. 
   source = "../../modules/user"
 
