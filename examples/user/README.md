@@ -1,3 +1,9 @@
+---
+title: "User"
+linkTitle: "User"
+description: PowerFlex Terraform module
+weight: 2
+---
 <!--
 Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
