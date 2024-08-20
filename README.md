@@ -52,3 +52,4 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
   * [User](modules/user/README.md)
   * [SDC Linux](modules/sdc_host_linux/README.md)
   * [SDC ESXi](modules/sdc_host_esxi/README.md)
+  * [SDC Windows](modules/sdc_host_win/README.md)
