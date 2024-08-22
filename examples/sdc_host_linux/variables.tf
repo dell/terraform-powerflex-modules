@@ -53,22 +53,37 @@ variable "mdm_ips" {
   default = []
 }
 
-variable "scini_url" {
-  type        = string
-  description = "The URL where the SCINI module package is located."
+
+variable "scini" {
+ 
+  description = "The SCINI module package related variables."
+  type = object({
+    # The URL where the SCINI module package is located.
+    url = optional(string)
+    # specify distro where SDC will be deployed eg. RHEL, Ubuntu, SLES etc. as case sensitive
+    linux_distro = string
+    #allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver 
+    autobuild_scini = optional(bool, false)
+  })
 }
 
 variable "sdc_pkg" {
   description = "configuration for SDC package like url to download package from, copy as local package or directory on remote server. One of local_dir or remote_dir will be used based on the variable use_remote_path"
   type = object({
     # examples "http://example.com/EMC-ScaleIO-sdc-3.6-700.103.Ubuntu.22.04.x86_64.tar", "ftp://username:password@ftpserver/path/to/file"
-    url = string
-    pkg_name = string
+    url = optional(string)
+    #the name of the SDC package for local.
+    pkg_name = optional(string)
+    #the name of the SDC package for remote machine. It should be emc-sdc-package.(tar/rpm)
     remote_pkg_name = optional(string)
-    local_dir = string
+    #local directory where the SDC package will be downloaded.
+    local_dir = optional(string)
+    #remote directory where the SDC package will be downloaded. (if use_remote_path is true)
     remote_dir = optional(string, "/tmp")
     # use the SDC package on remote machine path (where SDC is deployed)
     use_remote_path = bool
+    # if SDC package is available in local directory, download can be skipped by setting to true
+    skip_download_sdc = optional(bool, false)
   })
 }
 

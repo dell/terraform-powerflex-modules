@@ -27,7 +27,7 @@ module "sdc_host_linux" {
   versions = var.versions
   ip = var.ip
   remote_host = var.remote_host
-  scini_url = var.scini_url
+  scini = var.scini
   sdc_pkg = var.sdc_pkg
   mdm_ips = var.mdm_ips
 }

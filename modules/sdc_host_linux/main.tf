@@ -33,11 +33,11 @@ locals {
 
 locals {
   use_remote_path = var.sdc_pkg.use_remote_path
-  share_url_scini = var.scini_url
+  share_url_scini = var.scini.url
 }
 resource terraform_data sdc_pkg_local {
   #do if use_remote_path is false.
-  count = var.sdc_pkg.use_remote_path ? 0: 1
+  count = ( var.sdc_pkg.use_remote_path && !var.sdc_pkg.skip_download_sdc) ? 0: 1
   input = var.sdc_pkg
   #One option is to download sdc on local drive and provide local path
   provisioner "local-exec" {
@@ -113,7 +113,7 @@ resource "terraform_data" "compare_version" {
 #copy SDC package on remote server
 resource terraform_data sdc_pkg_remote {
   # perform if variable is true
-  count = local.use_remote_path ? 1 : 0
+  count = ( local.use_remote_path && !var.sdc_pkg.skip_download_sdc) ? 1: 0
   connection {
     type = "ssh"
     user = self.output.user.name
@@ -154,6 +154,7 @@ resource terraform_data sdc_pkg_remote {
 # # STEP 3 - install pre-requisites (scini module)
 # # provisioner to install scini module on SDC
 resource "terraform_data" "linux_scini" {
+  count = ( var.scini.linux_distro == "RHEL" || var.scini.autobuild_scini) ? 0 : 1
   connection {
     type = "ssh"
     user = self.output.user.name
@@ -175,7 +176,7 @@ resource "terraform_data" "linux_scini" {
           password = var.remote_host.password
       }
       ip = var.ip
-      scini_url = var.scini_url
+      scini_url = var.scini.url
   }
 
   provisioner "remote-exec" {
@@ -192,12 +193,51 @@ resource "terraform_data" "linux_scini" {
   }
 }
 
+# # provisioner to install scini module on SDC
+resource "terraform_data" "linux_scini_auto" {
+  # Execute when autobuild flag is set and if it is not RHEL
+  count = ( var.scini.linux_distro != "RHEL" && var.scini.autobuild_scini) ? 1 : 0
+  connection {
+    type = "ssh"
+    user = self.output.user.name
+    private_key = self.output.user.private_key
+    certificate = self.output.user.certificate
+    host = self.output.ip
+    password = self.output.user.password
+  }
+  input = {
+      user = {
+          name = var.remote_host.user
+          #user can use keys or userid/password. Make sure to copy the keys to remote server before using keys
+          private_key = var.remote_host.private_key == "" ? "" : data.local_sensitive_file.ssh_key[0].content
+          certificate = var.remote_host.certificate == "" ? "" : data.local_sensitive_file.ssh_cert[0].content
+          password = var.remote_host.password
+      }
+      ip = var.ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p /etc/emc/scaleio/scini_sync",
+      "touch /etc/emc/scaleio/scini_sync/.build_scini",
+    ]
+  }
+  provisioner "remote-exec" {
+    when = destroy
+    inline = [
+      "rm /etc/emc/scaleio/scini_sync/.build_scini"
+    ]
+  }
+}
+
+
 # # STEP 4 - Install actual SDC
 # # SDC configuration
  resource powerflex_sdc_host sdc_local_path {
 
    count = local.use_remote_path ? 0 : 1 #deploy if variable is false
-   depends_on = [ terraform_data.linux_scini ]
+   depends_on = [ terraform_data.compare_version,
+                  terraform_data.linux_scini]
    ip = var.ip
    remote = {
      user = var.remote_host.user
@@ -215,7 +255,8 @@ resource "terraform_data" "linux_scini" {
 
  resource powerflex_sdc_host sdc_remote_path {
    count = local.use_remote_path  ? 1 : 0 #deploy if variable is true
-   depends_on = [ terraform_data.linux_scini ]
+   depends_on = [ terraform_data.compare_version,
+                  terraform_data.linux_scini]
    ip = var.ip
    remote = {
      user = var.remote_host.user
