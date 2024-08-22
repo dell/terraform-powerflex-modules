@@ -1,3 +1,9 @@
+---
+title: "Windows SDC"
+linkTitle: "Windows SDC"
+description: PowerFlex Terraform module
+weight: 2
+---
 <!--
 Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
@@ -19,6 +25,37 @@ limitations under the License.
 
 This Terraform module installs the SDC package on a remote Windows host using the `powerflex_sdc_host` resource.
 It downloads the package either on local machine or remote (Windows) machine and deploys on Windows.
+
+## Example inputs
+
+terraform.tfvars
+```hcl
+remote_host={
+    user = "root"
+    private_key = ""
+    certificate = ""
+    password = "password"
+    }
+
+
+ip="1.2.11.10"
+
+sdc_pkg = {
+    url = "http://example.com/EMC-ScaleIO-sdc-3.6-300.107.msi"
+    local_pkg = "sdc-4.5.0.263-esx8.x.zip"
+    local_dir = "/tmp"
+    pkg_name = "sdc-4.5.0.263-esx8.x.zip"
+    remote_pkg_name = "emc-sdc-package.zip"
+    remote_dir = "/tmp"
+    use_remote_path = true
+}
+
+powerflex_config = {
+    username = "admin"
+    endpoint = "https://1.2.3.4:443"
+    password = "Password" 
+}
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

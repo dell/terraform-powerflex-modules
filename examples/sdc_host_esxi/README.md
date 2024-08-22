@@ -1,3 +1,9 @@
+---
+title: "EXSi SDC"
+linkTitle: "EXSi SDC"
+description: PowerFlex Terraform module
+weight: 2
+---
 <!--
 Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
@@ -34,6 +40,37 @@ After successful operation of above commands, to remove deployment, you need to 
 
 ```bash
 terraform destroy 
+```
+
+## Example inputs
+
+terraform.tfvars
+```hcl
+remote_host={
+    user = "root"
+    private_key = ""
+    certificate = ""
+    password = "password"
+    }
+
+
+ip="1.2.11.10"
+
+sdc_pkg = {
+    url = "https://example.com/sdc-4.5.0.263-esx8.x.zip"
+    local_pkg = "sdc-4.5.0.263-esx8.x.zip"
+    local_dir = "/tmp"
+    pkg_name = "sdc-4.5.0.263-esx8.x.zip"
+    remote_pkg_name = "emc-sdc-package.zip"
+    remote_dir = "/tmp"
+    use_remote_path = true
+}
+
+powerflex_config = {
+    username = "admin"
+    endpoint = "https://1.2.3.4:443"
+    password = "Password" 
+}
 ```
 
 <!-- BEGIN_TF_DOCS -->
