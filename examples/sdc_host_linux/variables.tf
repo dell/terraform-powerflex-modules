@@ -58,9 +58,9 @@ variable "scini" {
  
   description = "The SCINI module package related variables."
   type = object({
-    # The URL where the SCINI module package is located.
+    # The URL where the SCINI module package is located. Ignored if autobuild_scini is true.
     url = optional(string)
-    # specify distro where SDC will be deployed eg. RHEL, Ubuntu, SLES etc. as case sensitive
+    # specify distro where SDC will be deployed eg. RHEL9, Ubuntu etc. as case sensitive
     linux_distro = string
     #allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver 
     autobuild_scini = optional(bool, false)
