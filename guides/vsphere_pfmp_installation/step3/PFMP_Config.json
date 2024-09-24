@@ -1,0 +1,25 @@
+{
+    "Nodes": [
+      {
+        "hostname": "pfmp-mvm-01",
+        "ipaddress": "10.10.10.11"
+      },
+      {
+        "hostname": "pfmp-mvm-02",
+        "ipaddress": "10.10.10.12"
+      },
+      {
+        "hostname": "pfmp-mvm-03",
+        "ipaddress": "10.10.10.13"
+      }
+    ],
+    "ClusterReservedIPPoolCIDR": "10.42.0.0/23",
+    "ServiceReservedIPPoolCIDR": "10.43.0.0/23",
+    "RoutableIPPoolCIDR": [
+      {
+        "mgmt": "1.2.3.4 - 1.2.3.9"
+      }
+    ],
+    "PFMPHostname": "example.dell.com",
+    "PFMPHostIP": "1.2.3.4"
+  }
