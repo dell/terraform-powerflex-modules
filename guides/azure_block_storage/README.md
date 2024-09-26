@@ -1,11 +1,11 @@
 ## APEX Block Storage deployment on Microsoft Azure
 
-This will guide you through how to deploy Dell APEX Block Storage for Microsoft Azure with teffaform cli.
+This will guide you through how to deploy Dell APEX Block Storage for Microsoft Azure with terraform cli.
 
-#### Prerequisites
+## Prerequisites
 https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure
 
-Required: terraform: v1.5 and later
+Required: terraform >= 1.5, azure cli, ssh key pair
 
 #### Electronically sign and acknowledge the EULA
  - [Software Evaluation License Agreement](https://pact.ly/HJb2H-)
@@ -24,6 +24,9 @@ Required: terraform: v1.5 and later
     - [Authenticate with a Microsoft account using Windows (with Bash)](https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate-to-azure-with-microsoft-account)
     - [Authenticate with a service principal](https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate-to-azure-with-service-principle?tabs=bash)
     - Authenticate with a managed identity for Azure services
+
+#### Create an SSH key pair
+https://learn.microsoft.com/en-us/viva/glint/setup/sftp-ssh-key-gen
 
 ## Deployment Tiers
 Within examples/azure_pfmp/terraform.tfvars there is a deployment_type variable, defined as:
@@ -62,7 +65,7 @@ For this part, please run the following steps locally.
     terraform init -upgrade
     ```
 
-3. Copy ssh key files into `examples/azure_pfmp/ssh`, adjust `terraform.tfvars` and create a terraform execution plan
+3. Copy ssh key pair into `examples/azure_pfmp/ssh`, adjust `terraform.tfvars` and create a terraform execution plan
     ```
     terraform plan -out main.tfplan
     ```
