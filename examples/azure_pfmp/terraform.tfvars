@@ -23,7 +23,6 @@ deployment_type         = "balanced" # balanced, optimized_v1 or optimized_v2
 is_multi_az             = false
 existing_resource_group = null # If null, a new RG will be created, else provide an existing "RG name"
 location                = "eastus"
-powerflex_version       = "4.6.0" # 4.6.0 or 4.5.0
 prefix                  = "yulan-balanced"
 
 ### data disk

@@ -27,15 +27,15 @@ locals {
   storage_instance_image_reference = {
     publisher = var.image_reference.publisher
     offer     = var.image_reference.offer
-    sku       = var.powerflex_version == "4.6.0" ? var.image_reference.storage460 : var.image_reference.storage450
-    version   = var.powerflex_version
+    sku       = var.image_reference.storage460
+    version   = "4.6.0"
   }
 
   installer_image_reference = {
     publisher = var.image_reference.publisher
     offer     = var.image_reference.offer
-    sku       = var.powerflex_version == "4.6.0" ? var.image_reference.installer460 : var.image_reference.installer450
-    version   = var.powerflex_version
+    sku       = var.image_reference.installer460
+    version   = "4.6.0"
   }
 
   invalid_rg_name = "!!i_am_not_a_valid_name!!"
