@@ -94,7 +94,7 @@ For this part, please run the following steps locally.
 
 #### 2. Deploy PowerFlex on installer
 
-For this part, the following steps need to be executed inside of **installer**.
+For this part, the following steps need to be executed inside of **installer**. As a second option, you can use the *az network bastion tunnel* steps defined in the Misc section below.
 
 1. Check `/root` folder, make sure `terraform.tfvars` for PowerFlex core deployment has been automatically generated.
 
@@ -140,11 +140,61 @@ For this part, the following steps need to be executed inside of **installer**.
 1. [Accept marketplace terms](https://kb.brightcomputing.com/knowledge-base/azure-mp-terms/)
 
 2. [Upload and download files via bastion tunnel](https://learn.microsoft.com/en-us/azure/bastion/vm-upload-download-native)
-
+   
     ```
     az network bastion tunnel --name "<BastionName>" --resource-group "<ResourceGroupName>" --target-resource-id "<VMResourceId>" --resource-port "<TargetVMPort>" --port "<LocalMachinePort>"
     scp -P <LocalMachinePort>  <local machine file path>  <username>@127.0.0.1:<target VM file path>
     ```
+   **Detailed steps** to use the *az network bastion tunnel*
+   
+    1. For the initial install, two files will need to be copied to the installer
+       - PowerFlex_4.5.2100.105_SLES15.4.zip (current build default)
+       - terraform-powerflex-modules-azure-block-storage.zip (this repo)
+    2. Open the tunnel the with *az network bastion tunnel* output from the Terraform step 1 execution.
+    3. Open a new connection and SSH into the installer: 
+        ```
+        ssh -p 1111 pflexuser@127.0.0.1
+        ```
+    4. You can now scp files directly into the installer with this tunnel. Open a new connection and scp the files to the installer. Transfer the two files and unzip within the installer when the transfers are complete. The scp connection will ask for the password.
+        ```
+        Example:   
+        scp -P <LocalMachinePort>  <local machine file path>  <username>@127.0.0.1:<target VM file path>
+    
+        scp -P 1111  "C:\temp\PowerFlex_4.5.2100.105_SLES15.4.zip" pflexuser@127.0.0.1:/home/pflexuser
+        scp -P 1111  "C:\temp\terraform-powerflex-modules-azure-block-storage.zip" pflexuser@127.0.0.1:/home/pflexuser
+        ```
+    5. When the transfers are complete, copy the zip files to root. Use the previously opened ssh connection from step 3. The PWD should be `/home/pflexuser`
+        ```
+        sudo cp -r PowerFlex_4.5.2100.105_SLES15.4.zip /root
+        sudo cp -r terraform-powerflex-modules-azure-block-storage.zip /root
+        sudo -i
+        cd /root & ls -l
+        unzip PowerFlex_4.5.2100.105_SLES15.4.zip
+        unzip terraform-powerflex-modules-azure-block-storage.zip
+        ```
+    6. Prepare Terraform execution - Change Directory
+        ```
+        cd terraform-powerflex-modules-azure-block-storage/examples/azure_core
+        ```
+    7. Copy the dynmically created terraform.tfvars into your PWD which is now `/azure_core`
+        ```
+        cp /root/terraform.tfvars .
+        ```
+    8. Terraform init
+        ```
+        terraform init -upgrade
+        ```
+    9. Create the Terraform plan
+        ```
+        terraform plan -out main.tfplan
+        ```
+    10. Apply the Terraform execution plan
+        ```
+        terraform apply main.tfplan
+        ```
+    11. This step can be monitored via the PowerFlex Manager UI under Monitoring | Events
+    12. Close the bastion tunnel conection when terraform is complete
+
 3. Tools
     - [Terraform v1.9.5](https://releases.hashicorp.com/terraform/1.9.5/terraform_1.9.5_linux_amd64.zip)
     - [MobaXterm v24.2](https://download.mobatek.net/2422024061715901/MobaXterm_Portable_v24.2.zip)
