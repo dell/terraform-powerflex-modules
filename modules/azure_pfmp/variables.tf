@@ -73,6 +73,12 @@ variable "enable_jumphost" {
   default = false
 }
 
+variable "enable_sql_workload_vm" {
+  type    = bool
+  default = false
+}
+
+
 # TODO: Add more validation according to:
 # https://infohub.delltechnologies.com/en-us/l/dell-apex-block-storage-for-microsoft-azure/azure-storage-considerations/
 variable "cluster" {
@@ -214,6 +220,22 @@ variable "jumphost_image_reference" {
     version   = "latest"
   }
   description = "Jumphost image."
+}
+
+variable "sqlvm_image_reference" {
+  type = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = string
+  })
+  default = {
+    publisher = "microsoftsqlserver"
+    offer     = "sql2022-ws2022"
+    sku       = "sqldev-gen2"
+    version   = "16.0.240923"
+  }
+  description = "Sqlvm image."
 }
 
 variable "login_credential" {

@@ -19,16 +19,17 @@
 cluster_node_count      = 5 # Minimum of 5. If is_multi_az = true, then minimum of 6
 enable_bastion          = true
 enable_jumphost         = true
+enable_sql_workload_vm  = true # If enabled, will deploy Standard_D4d_v5
 deployment_type         = "balanced" # balanced, optimized_v1 or optimized_v2
 is_multi_az             = false
 existing_resource_group = null # If null, a new RG will be created, else provide an existing "RG name"
-location                = "eastus"
-prefix                  = "yulan-balanced"
-
+location                = "westus3"
+prefix                  = "sonders-tf-test"
 ### data disk
 ### the following value won't take effect on optimized_v1 and optimized_v2 deployment
 ### it will always be:
 ###     data_disk_count = 4 data_disk_size_gb=1966.08 for optimized_v1
 ###     data_disk_count = 8 data_disk_size_gb=1966.08 for optimized_v2
-data_disk_count   = 20
+data_disk_count   = 2
 data_disk_size_gb = 512
+
