@@ -80,3 +80,21 @@ variable "allow_unverified_ssl" {
   description = "Allow unverified ssl connection"
   default = true
 }
+
+variable "num_cpus" {
+  type = number
+  description = "Number of CPUs for the virtual machine. Defaults to `1`"
+  default = 1
+}
+
+variable "memory" {
+  type = number
+  description = "Memory for the virtual machine. Defaults to `4060`"
+  default = 4060
+}
+
+variable "adapter_type" {
+  type = string
+  description = "Network Adapter Type for the virtual machine. Defaults to `vmxnet3` Options can be found here: https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.vm_admin.doc/GUID-AF9E24A8-2CFA-447B-AC83-35D563119667.html"
+  default = "vmxnet3"
+}

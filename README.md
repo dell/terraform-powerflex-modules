@@ -50,6 +50,8 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
 
 ## List of Submodules in Terraform Modules for Dell PowerFlex
   * [User](modules/user/README.md)
-  * [SDC Linux](modules/sdc_host_linux/README.md)
-  * [SDC ESXi](modules/sdc_host_esxi/README.md)
-  * [SDC Windows](modules/sdc_host_win/README.md)
+  * [SDC Linux](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/sdc_host_linux)
+  * [SDC ESXi](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/sdc_host_esxi)
+  * [SDC Windows](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/sdc_host_win)
+  * [vSphere OVA Deployment](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/vsphere-ova-vm-deployment)
+  * [Powerflex Management Installer EXSi](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/vsphere_pfmp_installation)
