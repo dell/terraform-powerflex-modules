@@ -78,7 +78,6 @@ variable "enable_sql_workload_vm" {
   default = false
 }
 
-
 # TODO: Add more validation according to:
 # https://infohub.delltechnologies.com/en-us/l/dell-apex-block-storage-for-microsoft-azure/azure-storage-considerations/
 variable "cluster" {
@@ -163,6 +162,7 @@ variable "vm_size" {
   type = object({
     jumphost     = string
     installer    = string
+    sqlvm        = string
     balanced     = string
     optimized_v1 = string
     optimized_v2 = string
@@ -170,6 +170,7 @@ variable "vm_size" {
   default = {
     jumphost     = "Standard_D2s_v3"
     installer    = "Standard_D4s_v3"
+    sqlvm        = "Standard_D4d_v5"
     balanced     = "Standard_F48s_v2"
     optimized_v1 = "Standard_L32as_v3"
     optimized_v2 = "Standard_L64as_v3"
@@ -230,7 +231,7 @@ variable "sqlvm_image_reference" {
     version   = string
   })
   default = {
-    publisher = "microsoftsqlserver"
+    publisher = ""
     offer     = "sql2022-ws2022"
     sku       = "sqldev-gen2"
     version   = "16.0.240923"
