@@ -231,7 +231,7 @@ variable "sqlvm_image_reference" {
     version   = string
   })
   default = {
-    publisher = ""
+    publisher = "microsoftsqlserver"
     offer     = "sql2022-ws2022"
     sku       = "sqldev-gen2"
     version   = "16.0.240923"
