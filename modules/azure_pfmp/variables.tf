@@ -170,7 +170,7 @@ variable "vm_size" {
   default = {
     jumphost     = "Standard_D2s_v3"
     installer    = "Standard_D4s_v3"
-    sqlvm        = "Standard_D4d_v5"
+    sqlvm        = "Standard_D4ds_v5"
     balanced     = "Standard_F48s_v2"
     optimized_v1 = "Standard_L32as_v3"
     optimized_v2 = "Standard_L64as_v3"
