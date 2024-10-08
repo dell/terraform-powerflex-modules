@@ -24,15 +24,17 @@ module "azure_pfmp" {
     data_disk_count   = var.data_disk_count
     data_disk_size_gb = var.data_disk_size_gb
   }
-  data_disk_logical_sector_size = var.data_disk_logical_sector_size
-  enable_bastion                = var.enable_bastion
-  enable_jumphost               = var.enable_jumphost
-  enable_sql_workload_vm        = var.enable_sql_workload_vm
-  existing_resource_group       = var.existing_resource_group
-  location                      = var.location
-  login_credential              = var.login_credential
-  prefix                        = var.prefix
-  ssh_key                       = var.ssh_key
+  data_disk_logical_sector_size  = var.data_disk_logical_sector_size
+  enable_bastion                 = var.enable_bastion
+  enable_jumphost                = var.enable_jumphost
+  enable_sql_workload_vm         = var.enable_sql_workload_vm
+  existing_resource_group        = var.existing_resource_group
+  installer_gallary_image        = var.installer_gallary_image
+  location                       = var.location
+  login_credential               = var.login_credential
+  prefix                         = var.prefix
+  ssh_key                        = var.ssh_key
+  storage_instance_gallary_image = var.storage_instance_gallary_image
 }
 
 output "bastion_tunnel" {
