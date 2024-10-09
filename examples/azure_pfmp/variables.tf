@@ -77,6 +77,19 @@ variable "data_disk_logical_sector_size" {
   default = 512
 }
 
+variable "login_credential" {
+  type = object({
+    username = string
+    password = string
+  })
+  sensitive = true
+  default = {
+    username = "pflexuser"
+    password = "PowerFlex123!"
+  }
+  description = "Azure VM login credential."
+}
+
 variable "ssh_key" {
   type = object({
     public  = string
@@ -86,4 +99,5 @@ variable "ssh_key" {
     public  = "./ssh/azure.pem.pub"
     private = "./ssh/azure.pem"
   }
+  description = "Azure VM SSH key pair."
 }

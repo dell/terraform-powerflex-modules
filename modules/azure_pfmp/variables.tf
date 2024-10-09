@@ -230,10 +230,7 @@ variable "login_credential" {
     username = string
     password = string
   })
-  default = {
-    username = "pflexuser"
-    password = "PowerFlex123!"
-  }
+  sensitive = true
 }
 
 variable "ssh_key" {

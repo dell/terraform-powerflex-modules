@@ -24,6 +24,7 @@ variable "username" {
 variable "password" {
   type        = string
   description = "PowerFlex manamgement platform portal password"
+  sensitive   = true
 }
 
 variable "endpoint" {
@@ -42,6 +43,7 @@ variable "login_credential" {
     password = string
   })
   description = "SSH login credential for the cluster nodes"
+  sensitive   = true
 }
 
 ## We will maintain the latest version as the default version
