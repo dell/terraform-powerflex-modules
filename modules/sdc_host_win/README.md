@@ -20,6 +20,31 @@ limitations under the License.
 This Terraform module installs the SDC package on a remote Windows host using the `powerflex_sdc_host` resource.
 It downloads the package either on local machine or remote (Windows) machine and deploys on Windows.
 
+## Usage
+
+```hcl
+module "sdc_host_win" {
+  # Here source points to the sdc_host_win submodule in the modules folder. You can change the value to point it according to your usecase. 
+  source = "../../modules/sdc_host_win"
+  ip = var.ip
+  remote_host = var.remote_host
+  sdc_pkg = var.sdc_pkg
+}
+```
+
+Please refer the SDC Host example [here](../../examples/sdc_host_win/main.tf)
+After providing proper values to all the attributes eg. using terraform.tfvars, then in that workspace, run
+
+```
+terraform init
+terraform apply
+```
+After successful operation of above commands, to remove deployment, you need to execute:
+
+```bash
+terraform destroy 
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -61,31 +86,4 @@ No modules.
 ## Outputs
 
 No outputs.
-
-## Usage
-
-```hcl
-
-module "sdc_host_win" {
-  # Here source points to the sdc_host_win submodule in the modules folder. You can change the value to point it according to your usecase. 
-  source = "../../modules/sdc_host_win"
-
-  ip = var.ip
-  remote_host = var.remote_host
-  sdc_pkg = var.sdc_pkg
-}
-```
-
-Please refer the SDC Host example [here](../../examples/sdc_host_win/main.tf)
-After providing proper values to all the attributes eg. using terraform.tfvars, then in that workspace, run
-
-```
-terraform init
-terraform apply
-```
-After successful operation of above commands, to remove deployment, you need to execute:
-
-```bash
-terraform destroy 
-```
 <!-- END_TF_DOCS -->

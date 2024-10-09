@@ -48,8 +48,15 @@ resource "vsphere_virtual_machine" "vm-installer-remote" {
   host_system_id       = data.vsphere_host.host.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
 
+  num_cpus = var.num_cpus
+  memory = var.memory
   wait_for_guest_net_timeout = 0
   wait_for_guest_ip_timeout  = 0
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+    adapter_type = var.adapter_type 
+  }
 
   ovf_deploy {
     allow_unverified_ssl_cert = var.allow_unverified_ssl
@@ -59,7 +66,7 @@ resource "vsphere_virtual_machine" "vm-installer-remote" {
     ip_allocation_policy = var.ip_allocation_policy
 
     ovf_network_map = {
-      "VM Network" = data.vsphere_network.network.id
+      network_id = data.vsphere_network.network.id
     }
   }
 }
@@ -73,8 +80,15 @@ resource "vsphere_virtual_machine" "vm-installer-local" {
   host_system_id       = data.vsphere_host.host.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
 
+  num_cpus = var.num_cpus
+  memory = var.memory
   wait_for_guest_net_timeout = 0
   wait_for_guest_ip_timeout  = 0
+
+  network_interface {
+    network_id = data.vsphere_network.network.id
+    adapter_type = var.adapter_type 
+  }
 
   ovf_deploy {
     allow_unverified_ssl_cert = var.allow_unverified_ssl
