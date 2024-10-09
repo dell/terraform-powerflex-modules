@@ -178,17 +178,8 @@ variable "os_disk_size_gb" {
 # https://azuremarketplace.microsoft.com/en-us/marketplace/apps/dellemc.dell_apex_block_storage
 # az vm image list --all --publisher "dellemc"
 # az vm image show --publisher "dellemc" --offer "dell_apex_block_storage" --sku "apexblockstorage-4_6_0" --version "4.6.0" --json
-# sku: apexblockstorage, apexblockstorageinstaller, apexblockstorage-4_6_0, apexblockstorageinstaller-4_6_0
+# sku: apexblockstorage, installer45, apexblockstorage-4_6_0, apexblockstorageinstaller-4_6_0
 # version: 4.5.0, 4.6.0
-variable "powerflex_version" {
-  type    = string
-  default = "4.6.0"
-
-  validation {
-    condition     = contains(["4.5.0", "4.6.0"], var.powerflex_version)
-    error_message = "Must be either \"4.5.0\" or \"4.6.0\"."
-  }
-}
 
 variable "image_reference" {
   type = object({

@@ -30,7 +30,6 @@ module "azure_pfmp" {
   existing_resource_group       = var.existing_resource_group
   location                      = var.location
   login_credential              = var.login_credential
-  powerflex_version             = var.powerflex_version
   prefix                        = var.prefix
   ssh_key                       = var.ssh_key
 }

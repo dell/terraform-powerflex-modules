@@ -56,12 +56,6 @@ variable "deployment_type" {
   default = "balanced"
 }
 
-variable "powerflex_version" {
-  type        = string
-  default     = "4.6.0"
-  description = "Must be either \"4.5.1\" or \"4.6.0\"."
-}
-
 variable "data_disk_size_gb" {
   type    = number
   default = 512
