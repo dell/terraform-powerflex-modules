@@ -225,8 +225,6 @@ resource "azurerm_mssql_virtual_machine" "sqlvm" {
   sql_connectivity_update_username = "sqllogin"
 }
 
-
-
 ## Create storage instance
 # https://www.dell.com/support/manuals/zh-hk/scaleio/flex-cloud-azure-deploy-45x/create-the-virtual-machine-for-the-storage-instance?guid=guid-c87fe065-5e65-4c96-84b9-a8f5065230cd&lang=en-us
 resource "azurerm_network_interface" "storage_instance_nic" {
