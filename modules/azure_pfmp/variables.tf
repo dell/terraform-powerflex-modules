@@ -210,6 +210,7 @@ variable "image_reference" {
 variable "storage_instance_gallary_image" {
   type = object({
     name                = string
+    image_name          = string
     gallery_name        = string
     resource_group_name = string
   })
@@ -220,6 +221,7 @@ variable "storage_instance_gallary_image" {
 variable "installer_gallary_image" {
   type = object({
     name                = string
+    image_name          = string
     gallery_name        = string
     resource_group_name = string
   })
