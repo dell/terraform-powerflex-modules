@@ -27,6 +27,7 @@ module "azure_pfmp" {
   data_disk_logical_sector_size = var.data_disk_logical_sector_size
   enable_bastion                = var.enable_bastion
   enable_jumphost               = var.enable_jumphost
+  enable_sql_workload_vm        = var.enable_sql_workload_vm
   existing_resource_group       = var.existing_resource_group
   location                      = var.location
   login_credential              = var.login_credential
@@ -45,3 +46,7 @@ output "pfmp_ip" {
 output "sds_nodes" {
   value = module.azure_pfmp.sds_nodes[*].ip
 }
+
+# output "sql_vm_ip" {
+#   value = module.azure_pfmp.sql_vm
+# }

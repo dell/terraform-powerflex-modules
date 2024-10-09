@@ -174,6 +174,66 @@ resource "azurerm_windows_virtual_machine" "jumphost_vm" {
 }
 
 
+## Optional SQL VM for workload validation testing
+## ToDo add resource "azurerm_network_security_rule" "MSSQLRule" for 1433
+resource "azurerm_network_interface" "sqlvm_nic" {
+  count               = var.enable_sql_workload_vm ? 1 : 0
+  name                = "${var.prefix}-sqlvm-nic"
+  location            = local.resource_group.location
+  resource_group_name = local.resource_group.name
+
+  ip_configuration {
+    name                          = "nic_configuration"
+    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_virtual_machine" "sqlvm" {
+  #count                 = var.enable_sql_workload_vm ? 1 : 0
+  name                  = "${var.prefix}-sql-vm"
+  location              = local.resource_group.location
+  resource_group_name   = local.resource_group.name
+  #zone                  = local.availability_zones[0]
+  network_interface_ids = [azurerm_network_interface.sqlvm_nic[0].id]
+  vm_size                  = "Standard_D4d_v5" #var.vm_size.sqlvm #Find the proper bandwidth VM to pair with APEX Block
+
+  storage_image_reference {
+    publisher = var.sqlvm_image_reference.publisher
+    offer     = var.sqlvm_image_reference.offer
+    sku       = var.sqlvm_image_reference.sku
+    version   = var.sqlvm_image_reference.version
+  }
+
+  storage_os_disk {
+    name                 = "${var.prefix}-sqlvm-os-disk"
+    caching              = "ReadWrite"
+    create_option        = "FromImage"
+    managed_disk_type    = "Premium_LRS"
+   # storage_account_type = "Premium_LRS"
+  }
+  
+  os_profile {
+    computer_name  = "${var.prefix}-sql-vm"
+    admin_username = var.login_credential.username
+    admin_password = var.login_credential.password
+  }
+  os_profile_windows_config {
+  }
+}
+resource "azurerm_mssql_virtual_machine" "sqlvm" {
+
+  virtual_machine_id               = azurerm_virtual_machine.sqlvm.id
+  sql_license_type                 = "PAYG"
+  r_services_enabled               = false
+  sql_connectivity_port            = 1433
+  sql_connectivity_type            = "PRIVATE"
+  sql_connectivity_update_password = "Password1234!"
+  sql_connectivity_update_username = "sqllogin"
+}
+
+
+
 ## Create storage instance
 # https://www.dell.com/support/manuals/zh-hk/scaleio/flex-cloud-azure-deploy-45x/create-the-virtual-machine-for-the-storage-instance?guid=guid-c87fe065-5e65-4c96-84b9-a8f5065230cd&lang=en-us
 resource "azurerm_network_interface" "storage_instance_nic" {

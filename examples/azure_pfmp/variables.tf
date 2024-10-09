@@ -41,6 +41,11 @@ variable "enable_jumphost" {
   default = false
 }
 
+variable "enable_sql_workload_vm" {
+  type    = bool
+  default = false
+}
+
 variable "cluster_node_count" {
   type    = number
   default = 5
