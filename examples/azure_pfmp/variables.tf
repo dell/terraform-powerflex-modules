@@ -100,3 +100,23 @@ variable "ssh_key" {
   }
   description = "Azure VM SSH key pair."
 }
+
+variable "storage_instance_gallary_image" {
+  type = object({
+    name                = string
+    gallery_name        = string
+    resource_group_name = string
+  })
+  description = "PowerFlex storage instance image in local gallary."
+  default     = null
+}
+
+variable "installer_gallary_image" {
+  type = object({
+    name                = string
+    gallery_name        = string
+    resource_group_name = string
+  })
+  description = "PowerFlex installer image in local gallary."
+  default     = null
+}

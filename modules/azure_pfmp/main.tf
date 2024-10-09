@@ -229,6 +229,20 @@ resource "azurerm_mssql_virtual_machine" "sqlvm" {
   }
 }
 
+data "azurerm_shared_image" "storage_instance_ami" {
+  count               = var.storage_instance_gallary_image != null ? 1 : 0
+  name                = var.storage_instance_gallary_image.name
+  gallery_name        = var.storage_instance_gallary_image.gallery_name
+  resource_group_name = var.storage_instance_gallary_image.resource_group_name
+}
+
+data "azurerm_shared_image" "installer_ami" {
+  count               = var.installer_gallary_image != null ? 1 : 0
+  name                = var.installer_gallary_image.name
+  gallery_name        = var.installer_gallary_image.gallery_name
+  resource_group_name = var.installer_gallary_image.resource_group_name
+}
+
 ## Create storage instance
 # https://www.dell.com/support/manuals/zh-hk/scaleio/flex-cloud-azure-deploy-45x/create-the-virtual-machine-for-the-storage-instance?guid=guid-c87fe065-5e65-4c96-84b9-a8f5065230cd&lang=en-us
 resource "azurerm_network_interface" "storage_instance_nic" {
@@ -261,17 +275,25 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
-  source_image_reference {
-    publisher = local.storage_instance_image_reference.publisher
-    offer     = local.storage_instance_image_reference.offer
-    sku       = local.storage_instance_image_reference.sku
-    version   = local.storage_instance_image_reference.version
+  source_image_id = var.storage_instance_gallary_image != null ? data.azurerm_shared_image.storage_instance_ami[0].id : null
+
+  dynamic "source_image_reference" {
+    for_each = var.storage_instance_gallary_image == null ? [1] : []
+    content {
+      publisher = local.storage_instance_image_reference.publisher
+      offer     = local.storage_instance_image_reference.offer
+      sku       = local.storage_instance_image_reference.sku
+      version   = local.storage_instance_image_reference.version
+    }
   }
 
-  plan {
-    name      = local.storage_instance_image_reference.sku
-    publisher = local.storage_instance_image_reference.publisher
-    product   = local.storage_instance_image_reference.offer
+  dynamic "plan" {
+    for_each = var.storage_instance_gallary_image == null ? [1] : []
+    content {
+      name      = local.storage_instance_image_reference.sku
+      publisher = local.storage_instance_image_reference.publisher
+      product   = local.storage_instance_image_reference.offer
+    }
   }
 
   disable_password_authentication = false
@@ -360,17 +382,25 @@ resource "azurerm_linux_virtual_machine" "installer" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
-  source_image_reference {
-    publisher = local.installer_image_reference.publisher
-    offer     = local.installer_image_reference.offer
-    sku       = local.installer_image_reference.sku
-    version   = local.installer_image_reference.version
+  source_image_id = var.installer_gallary_image != null ? data.azurerm_shared_image.installer_ami[0].id : null
+
+  dynamic "source_image_reference" {
+    for_each = var.installer_gallary_image == null ? [1] : []
+    content {
+      publisher = local.installer_image_reference.publisher
+      offer     = local.installer_image_reference.offer
+      sku       = local.installer_image_reference.sku
+      version   = local.installer_image_reference.version
+    }
   }
 
-  plan {
-    name      = local.installer_image_reference.sku
-    publisher = local.installer_image_reference.publisher
-    product   = local.installer_image_reference.offer
+  dynamic "plan" {
+    for_each = var.installer_gallary_image == null ? [1] : []
+    content {
+      name      = local.installer_image_reference.sku
+      publisher = local.installer_image_reference.publisher
+      product   = local.installer_image_reference.offer
+    }
   }
 
   disable_password_authentication = false
