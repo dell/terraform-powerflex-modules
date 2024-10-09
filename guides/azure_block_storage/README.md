@@ -52,7 +52,7 @@ For this part, please run the following steps locally.
     az account show
     ```
     
-    Alternatively set the following environment variables if to authenticate with service principal credentials
+    Alternatively set the following environment variables for terraform if to authenticate with service principal, and sign in azure cli with service principal by running `az login --service-principal -u <client-id> -p <client-secret> --tenant <tenant>`
 
     - `ARM_SUBSCRIPTION_ID`
     - `ARM_TENANT_ID`
