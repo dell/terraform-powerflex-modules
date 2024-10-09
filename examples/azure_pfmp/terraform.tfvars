@@ -19,7 +19,7 @@
 cluster_node_count      = 5 # Minimum of 5. If is_multi_az = true, then minimum of 6
 enable_bastion          = true
 enable_jumphost         = true
-enable_sql_workload_vm  = false # If enabled, will deploy Standard_D4d_v5
+enable_sql_workload_vm  = false # If enabled, will deploy Standard_D4ds_v5.
 deployment_type         = "balanced" # balanced, optimized_v1 or optimized_v2
 is_multi_az             = false
 existing_resource_group = null # If null, a new RG will be created, else provide an existing "RG name"

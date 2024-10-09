@@ -202,7 +202,7 @@ resource "azurerm_windows_virtual_machine" "sqlvm" {
   os_disk {
     name                 = "${var.prefix}-sqlvm-os-disk"
     caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
+    storage_account_type = "StandardSSD_LRS"
     disk_size_gb         = var.os_disk_size_gb
   }
 
@@ -221,8 +221,13 @@ resource "azurerm_mssql_virtual_machine" "sqlvm" {
   r_services_enabled               = false
   sql_connectivity_port            = 1433
   sql_connectivity_type            = "PRIVATE"
-  sql_connectivity_update_password = "Password1234!"
-  sql_connectivity_update_username = "sqllogin"
+  sql_connectivity_update_password = "PowerFlex123!"
+  sql_connectivity_update_username = "pflexuser"
+  
+  sql_instance {
+   max_server_memory_mb            = "12000"
+ }
+
 }
 
 ## Create storage instance
