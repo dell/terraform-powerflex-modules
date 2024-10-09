@@ -46,7 +46,3 @@ output "pfmp_ip" {
 output "sds_nodes" {
   value = module.azure_pfmp.sds_nodes[*].ip
 }
-
-# output "sql_vm_ip" {
-#   value = module.azure_pfmp.sql_vm
-# }
