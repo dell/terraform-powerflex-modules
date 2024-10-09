@@ -223,11 +223,10 @@ resource "azurerm_mssql_virtual_machine" "sqlvm" {
   sql_connectivity_type            = "PRIVATE"
   sql_connectivity_update_password = "PowerFlex123!"
   sql_connectivity_update_username = "pflexuser"
-  
-  sql_instance {
-   max_server_memory_mb            = "12000"
- }
 
+  sql_instance {
+    max_server_memory_mb = "12000"
+  }
 }
 
 ## Create storage instance
