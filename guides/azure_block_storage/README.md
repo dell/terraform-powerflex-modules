@@ -65,7 +65,7 @@ For this part, please run the following steps locally.
     terraform init -upgrade
     ```
 
-3. Copy ssh key pair into `examples/azure_pfmp/ssh`, adjust `terraform.tfvars` and create a terraform execution plan
+3. Copy ssh key pair into `examples/azure_pfmp/ssh` with public key name of `azure.pem.pub` and private key name of `azure.pem`, adjust `terraform.tfvars` and create a terraform execution plan
     ```
     terraform plan -out main.tfplan
     ```
