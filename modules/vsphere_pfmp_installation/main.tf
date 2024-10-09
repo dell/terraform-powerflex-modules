@@ -31,7 +31,12 @@ resource terraform_data set_ntp {
         "sudo sh -c 'echo server ${self.input.ntp_ip} iburst >> /etc/chrony.conf'",
         "sudo systemctl start chronyd",
         "sudo systemctl enable chronyd",
-        "sudo systemctl restart chronyd"
+        "sudo systemctl restart chronyd",
+        # Give a few moments for chryonyd to start
+        "sleep 5",
+        # Check to see if the ntp has a valid Reference ID that is not equal to 00000000
+        # If it is then the NTP is invalid and should show error
+        "chronyc tracking | if grep -q 'Reference ID    : 00000000'; then echo 'Invalid NTP IP'; exit 1; fi"
     ]
   }
 }
@@ -52,7 +57,12 @@ resource terraform_data set_ntp_node1 {
         "sudo sh -c 'echo server ${self.input.ntp_ip} iburst >> /etc/chrony.conf'",
         "sudo systemctl start chronyd",
         "sudo systemctl enable chronyd",
-        "sudo systemctl restart chronyd"
+        "sudo systemctl restart chronyd",
+        # Give a few moments for chryonyd to start
+        "sleep 5",
+        # Check to see if the ntp has a valid Reference ID that is not equal to 00000000
+        # If it is then the NTP is invalid and should show error
+        "chronyc tracking | if grep -q 'Reference ID    : 00000000'; then echo 'Invalid NTP IP'; exit 1; fi"
     ]
   }
 }
@@ -73,7 +83,12 @@ resource terraform_data set_ntp_node2 {
         "sudo sh -c 'echo server ${self.input.ntp_ip} iburst >> /etc/chrony.conf'",
         "sudo systemctl start chronyd",
         "sudo systemctl enable chronyd",
-        "sudo systemctl restart chronyd"
+        "sudo systemctl restart chronyd",
+        # Give a few moments for chryonyd to start
+        "sleep 5",
+        # Check to see if the ntp has a valid Reference ID that is not equal to 00000000
+        # If it is then the NTP is invalid and should show error
+        "chronyc tracking | if grep -q 'Reference ID    : 00000000'; then echo 'Invalid NTP IP'; exit 1; fi"
     ]
   }
 }
@@ -94,7 +109,12 @@ resource terraform_data set_ntp_node3 {
         "sudo sh -c 'echo server ${self.input.ntp_ip} iburst >> /etc/chrony.conf'",
         "sudo systemctl start chronyd",
         "sudo systemctl enable chronyd",
-        "sudo systemctl restart chronyd"
+        "sudo systemctl restart chronyd",
+        # Give a few moments for chryonyd to start
+        "sleep 5",
+        # Check to see if the ntp has a valid Reference ID that is not equal to 00000000
+        # If it is then the NTP is invalid and should show error
+        "chronyc tracking | if grep -q 'Reference ID    : 00000000'; then echo 'Invalid NTP IP'; exit 1; fi"
     ]
   }
 }
