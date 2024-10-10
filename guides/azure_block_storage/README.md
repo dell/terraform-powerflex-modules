@@ -75,9 +75,9 @@ For this part, please run the following steps locally.
     terraform apply main.tfplan
     ```
 
-    PS: Once the pfmp installation finishes, it will generate the `terraform.tfvars` file in the `/root` folder.
+    PS: Once the pfmp installation finishes, it will generate the `terraform.tfvars` file in the `/root` folder on **intaller** for part 2.
     
-    Copy the ssh/azure.pem file from this repo, to your SSH location connection location. Jump host as an example. Note: If using windows, remember to remove the .txt extension.
+    Copy the `examples/azure_pfmp/ssh/azure.pem` file to your SSH connection location. Jump host as an example.
     
     You can SSH into the installer node with the .pem `ssh -i azure.pem pflexuser@<InstallerIP>`
     The installer IP address can be found within the Azure portal.
@@ -130,7 +130,7 @@ For this part, the following steps need to be executed inside of **installer**. 
     terraform plan -out main.tfplan
     ```
 
-5. Apply the terraform execution plan. This process will execute for roughly 10 minutes. +/-.
+5. Apply the terraform execution plan. This process will execute for roughly 5 minutes. +/-.
     ```
     terraform apply main.tfplan
     ```
