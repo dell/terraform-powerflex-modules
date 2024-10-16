@@ -16,7 +16,7 @@
 # */
 
 ### cluster
-cluster_node_count      = 5 # Minimum of 5. If is_multi_az = true, then minimum of 6
+cluster_node_count      = 5          # Minimum of 5. If is_multi_az = true, then minimum of 6
 deployment_type         = "balanced" # balanced, optimized_v1 or optimized_v2
 enable_bastion          = true
 enable_jumphost         = true

@@ -16,7 +16,8 @@
 # */
 
 module "azure_pfmp" {
-  source = "../../modules/azure_pfmp"
+  source         = "../../modules/azure_pfmp"
+  bastion_subnet = var.bastion_subnet
   cluster = {
     node_count        = var.cluster_node_count
     is_multi_az       = var.is_multi_az
@@ -35,6 +36,8 @@ module "azure_pfmp" {
   prefix                         = var.prefix
   ssh_key                        = var.ssh_key
   storage_instance_gallary_image = var.storage_instance_gallary_image
+  subnets                        = var.subnets
+  vnet_address_space             = var.vnet_address_space
 }
 
 output "bastion_tunnel" {

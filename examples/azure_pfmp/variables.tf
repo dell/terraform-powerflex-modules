@@ -122,3 +122,30 @@ variable "installer_gallary_image" {
   description = "PowerFlex installer image in local gallary."
   default     = null
 }
+
+variable "vnet_address_space" {
+  type    = string
+  default = "10.2.0.0/16"
+}
+
+variable "subnets" {
+  type = list(object({
+    name   = string
+    prefix = string
+  }))
+  default = [{
+    name   = "BlockStorageSubnet"
+    prefix = "10.2.0.0/24"
+  }]
+}
+
+variable "bastion_subnet" {
+  type = object({
+    name   = string
+    prefix = string
+  })
+  default = {
+    name   = "AzureBastionSubnet"
+    prefix = "10.2.1.0/26"
+  }
+}
