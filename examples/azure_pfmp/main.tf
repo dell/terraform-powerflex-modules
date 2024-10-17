@@ -33,6 +33,7 @@ module "azure_pfmp" {
   installer_gallary_image        = var.installer_gallary_image
   location                       = var.location
   login_credential               = var.login_credential
+  pfmp_lb_ip                     = var.pfmp_lb_ip
   prefix                         = var.prefix
   ssh_key                        = var.ssh_key
   storage_instance_gallary_image = var.storage_instance_gallary_image

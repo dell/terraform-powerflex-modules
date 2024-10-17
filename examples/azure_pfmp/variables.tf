@@ -149,3 +149,7 @@ variable "bastion_subnet" {
     prefix = "10.2.1.0/26"
   }
 }
+
+variable "pfmp_lb_ip" {
+  default = "10.2.0.200"
+}
