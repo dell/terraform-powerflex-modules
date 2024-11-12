@@ -1,0 +1,11 @@
+Username,Password,Operating System,Is MDM/TB,MDM Mgmt IP,MDM Name,MDM IPs,Virtual IPs,Is SDS,Virtual IP NICs,SDS Name,SDS All IPs,Is SDC,Fault Set,Protection Domain,SDS Storage Device List,StoragePool List,Is SDT,SDT Name,SDT All IPs
+root,password,linux,,,,,,Yes,,sds1,IP_1,No,AZ3,PD1,"/dev/nvme1n1,/dev/nvme2n1,/dev/nvme3n1,/dev/nvme4n1,/dev/nvme5n1",SP1,No,,
+root,password,linux,TB,IP_2,TB1,IP_2,,Yes,,sds2,IP_2,Yes,AZ2,PD1,"/dev/nvme1n1,/dev/nvme2n1,/dev/nvme3n1,/dev/nvme4n1,/dev/nvme5n1",SP1,Yes,SDT2,IP_2
+root,password,linux,TB,IP_3,TB2,IP_3,,Yes,,sds3,IP_3,Yes,AZ1,PD1,"/dev/nvme1n1,/dev/nvme2n1,/dev/nvme3n1,/dev/nvme4n1,/dev/nvme5n1",SP1,Yes,SDT3,IP_3
+root,password,linux,Primary,IP_4,MDM1,IP_4,,Yes,,sds4,IP_4,Yes,AZ1,PD1,"/dev/nvme1n1,/dev/nvme2n1,/dev/nvme3n1,/dev/nvme4n1,/dev/nvme5n1",SP1,Yes,SDT4,IP_4
+root,password,linux,Secondary,IP_5,MDM2,IP_5,,Yes,,sds5,IP_5,Yes,AZ2,PD1,"/dev/nvme1n1,/dev/nvme2n1,/dev/nvme3n1,/dev/nvme4n1,/dev/nvme5n1",SP1,Yes,SDT5,IP_5
+root,password,linux,Secondary,IP_6,MDM3,IP_6,,Yes,,sds6,IP_6,Yes,AZ3,PD1,"/dev/nvme1n1,/dev/nvme2n1,/dev/nvme3n1,/dev/nvme4n1,/dev/nvme5n1",SP1,Yes,SDT6,IP_6
+,,,,,,,,,,,,,,,,,,,
+Storage Pool Configuration,,,,,,,,,,,,,,,,,,,
+ProtectionDomain,StoragePool,Media Type,External Acceleration,Data Layout,Fine Granularity ACCP,Zero Padding,Compression Method,,,,,,,,,,,,
+PD1,SP1,SSD,None,MG,,Yes,,,,,,,,,,,,,
