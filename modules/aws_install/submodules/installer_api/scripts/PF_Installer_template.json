@@ -1,0 +1,42 @@
+{
+	"pfmpConfig": {
+		"cluster": {
+			"type": "aws",
+			"name": "dellpowerflex.com"
+		},
+		"nodes": [
+			{
+				"credentials": {
+					"key": "/var/pfmp/keys/id_rsa",
+					"username": "pflex-user"
+				},
+				"hostname": "node1",
+				"ipaddress": "IP1",
+				"nodeport": 30400
+			},
+			{
+				"credentials": {
+					"key": "/var/pfmp/keys/id_rsa",
+					"username": "pflex-user"
+				},
+				"hostname": "node2",
+				"ipaddress": "IP2",
+				"nodeport": 30400
+			},
+			{
+				"credentials": {
+					"key": "/var/pfmp/keys/id_rsa",
+					"username": "pflex-user"
+				},
+				"hostname": "node3",
+				"ipaddress": "IP3",
+				"nodeport": 30400
+			}
+		],
+		"loadbalancer": {
+			"type": "external",
+			"ipaddress": "lb_IP"
+		}
+	},
+	"pfCoreConfig": "core_csv_template"
+}
