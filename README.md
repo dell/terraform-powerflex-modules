@@ -45,8 +45,8 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
 ## Prerequisites
 
 | **Terraform Provider** | **PowerFlex/VxFlex OS Version** | **OS** | **Terraform** | **Golang** |
-|---------------------|-----------------------|-------|--------------------|--------------------------|
-| >= v1.5.0 | >= 3.6 | ubuntu22.04 <br> rhel9.x | >= 1.5 | 1.22.x
+|------------------------|---------------------------------|--------|---------------|------------|
+| >= v1.5.0              | >= 3.6        | ubuntu22.04 <br> rhel9.x | >= 1.5        | 1.22.x
 
 ## List of Submodules in Terraform Modules for Dell PowerFlex
   * [User](modules/user/README.md)
@@ -55,3 +55,4 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
   * [SDC Windows](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/sdc_host_win)
   * [vSphere OVA Deployment](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/vsphere-ova-vm-deployment)
   * [Powerflex Management Installer EXSi](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/vsphere_pfmp_installation)
+  * [Azure Block Storage Deployment](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/azure_pfmp)
