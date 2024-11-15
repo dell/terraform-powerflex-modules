@@ -58,7 +58,9 @@ variable "deployment_type" {
     error_message = "deployment_type must be either 'performance' or 'balanced'."
   }
 }
-
+locals {
+   timestamp = replace(replace(replace(timestamp(), "Z", ""), ":", ""), "-", "")
+}
 variable "device_names" {
   type        = list(string)
   description = "the list of device names"
@@ -183,4 +185,9 @@ variable "private_subnet_cidr" {
   description = "the private cidr range"
 }
 
+variable "encrypted" {
+  type = bool
+  description = "the volume encryption flag"
+  default = false
+}
  

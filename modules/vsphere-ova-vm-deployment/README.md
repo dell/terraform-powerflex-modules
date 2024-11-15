@@ -47,10 +47,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_adapter_type"></a> [adapter\_type](#input\_adapter\_type) | Network Adapter Type for the virtual machine. Defaults to `vmxnet3` Options can be found here: https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.vm_admin.doc/GUID-AF9E24A8-2CFA-447B-AC83-35D563119667.html | `string` | `"vmxnet3"` | no |
 | <a name="input_allow_unverified_ssl"></a> [allow\_unverified\_ssl](#input\_allow\_unverified\_ssl) | Allow unverified ssl connection | `string` | `true` | no |
 | <a name="input_disk_provisioning"></a> [disk\_provisioning](#input\_disk\_provisioning) | The disk provisioning type for the virtual machine. Options (thin, flat, think, sameAsSource) defaults to `thin` | `string` | `"thin"` | no |
 | <a name="input_ip_allocation_policy"></a> [ip\_allocation\_policy](#input\_ip\_allocation\_policy) | The IP allocation policy for the virtual machine. Defaults to `STATIC_MANUAL` | `string` | `"STATIC_MANUAL"` | no |
 | <a name="input_ip_protocol"></a> [ip\_protocol](#input\_ip\_protocol) | The IP protocol for the virtual machine. Defaults to `IPV4` | `string` | `"IPV4"` | no |
+| <a name="input_memory"></a> [memory](#input\_memory) | Memory for the virtual machine. Defaults to `4060` | `number` | `4060` | no |
+| <a name="input_num_cpus"></a> [num\_cpus](#input\_num\_cpus) | Number of CPUs for the virtual machine. Defaults to `1` | `number` | `1` | no |
 | <a name="input_use_remote_path"></a> [use\_remote\_path](#input\_use\_remote\_path) | Whether or not to use a remote location or a local path, default to `true` | `bool` | `true` | no |
 | <a name="input_vm_name"></a> [vm\_name](#input\_vm\_name) | Name of the PFMP installer VM, default to `new_terraform_vm` | `string` | `"new_terraform_vm"` | no |
 | <a name="input_vm_ova_path"></a> [vm\_ova\_path](#input\_vm\_ova\_path) | Path of the powerflex manager VM OVA, if local `/example/test/example_vm.ova` if remote `https://<ip>/example/example_vm.ova` | `string` | n/a | yes |

@@ -36,4 +36,7 @@ module "vsphere_ova_vm_deployment" {
   # vm_name = "example-name"
   # use_remote_path = false
   # allow_unverified_ssl = false
+  # num_cpus = 8
+  # memory = 8120
+  # adapter_type = "vmxnet3"
 }

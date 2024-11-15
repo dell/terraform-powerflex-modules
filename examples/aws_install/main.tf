@@ -58,7 +58,7 @@ module "aws_install" {
 
   installer_node_ip = module.aws_infra.installer_ip
   co_res_ips = module.aws_infra.co_res_ips
-  device_mapping = var.device_names
+  device_mapping = module.aws_infra.device_mapping
   install_node_user = var.remote_user
   loadbalancer_dns = module.load-balancer.loadbalancer_dns
   loadbalancer_ip = module.load-balancer.loadbalancer_private_ip

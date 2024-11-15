@@ -65,36 +65,8 @@ module "internal_security_group" {
 }
 
 resource "aws_key_pair" "powerflex_key" {
-  key_name   = "pflex_key"
+  key_name   = "pflex-key-var.creator"
   public_key = file(var.key_path)
-}
-
-resource "aws_instance" "installer_instance" {
-  count         = 1
-  ami           = data.aws_ami.installer_ami.id
-  user_data           = data.template_file.user_data.rendered
-  instance_type = "t3.xlarge" #var.instance_type
-  subnet_id     = var.subnet_ids[0]
-  key_name      = aws_key_pair.powerflex_key.key_name
-  vpc_security_group_ids  = concat(module.internal_security_group.security_group_ids, [var.vpn_security_group])
-
-  root_block_device {
-    volume_size = var.disk_size
-    volume_type = var.disk_type
-    iops        = var.disk_type == "io1" || var.disk_type == "io2" ? var.disk_iops : null
-  }
-
-  tags = {
-    Name        = "${var.application_version}-installer-1-${var.creator}"
-    GeneratedBy = "Dell Terraform Module"
-    Release     = var.application_version
-    Creator     = var.creator
-  }
-}
-
-output "installer_ip" {
-  description = "The private ip of the installer server"
-  value       = try(aws_instance.installer_instance[0].private_ip, "")
 }
 
 data "aws_ami" "cores_ami" {
@@ -111,96 +83,61 @@ output "cores_ami_id" {
   value = data.aws_ami.cores_ami.id
 }
 
-resource "aws_network_interface" "powerflex-co-res-network-interface" {
-  count             = var.instance_count
-  subnet_id         = var.subnet_ids[count.index % length(var.availability_zones)]
-  security_groups   = concat(module.internal_security_group.security_group_ids, [var.vpn_security_group])
-  source_dest_check = false
-}
-
-
-resource "aws_instance" "cores_instance" {
-  count         = var.instance_count
-  ami           = data.aws_ami.cores_ami.id
+module "installer-server" {
+  source              = "./submodules/installer_server"
+  ami                 = data.aws_ami.installer_ami.id
+  application_version = var.application_version
+  creator             = var.creator
+  instance_type       = "t3.xlarge" #lookup(var.instance_type, "installer")
+  key_id              = aws_key_pair.powerflex_key.key_name
+  security_group_ids  = concat(module.internal_security_group.security_group_ids, [var.vpn_security_group])
+  subnet_id           = var.subnet_ids[0]
+  timestamp           = local.timestamp
   user_data           = data.template_file.user_data.rendered
-  instance_type = var.instance_type
-  #subnet_id     = var.subnet_ids[count.index % length(var.availability_zones)]
-  #availability_zone = var.multi_az ? element(var.availability_zones, count.index) : var.availability_zones[0]
-  network_interface {
-    network_interface_id = aws_network_interface.powerflex-co-res-network-interface[count.index].id
-    device_index         = 0
-  }
-  key_name      = aws_key_pair.powerflex_key.key_name
-
-  lifecycle {
-    precondition  {
-        condition     = var.multi_az ? length(var.availability_zones) >= 2 : true
-        error_message = "When multi_az is enabled, you must specify at least two availability zones."
-    }
-    precondition  {
-        condition     = var.deployment_type == "balanced" || var.deployment_type == "performance" ? true : false
-        error_message = "Deployment type should be either balanced or performance."
-    }
-    precondition  {
-        condition     = var.instance_count == (var.deployment_type == "performance" ? 3 : 5)
-        error_message = "You must create  ${var.deployment_type == "performance" ? 3 : 5} instances."
-    }
-    precondition  {
-        condition     =  var.multi_az && var.deployment_type == "balanced" ? var.instance_count == 6 : true
-        error_message = "You must create  6 instances for multizone."
-    }
-  }
-
-  dynamic "ebs_block_device" {
-    for_each = var.device_names
-    content {
-      device_name = ebs_block_device.value
-      volume_size = var.disk_size
-      volume_type = var.disk_type
-      iops        = var.disk_type == "io1" || var.disk_type == "io2" ? var.disk_iops : null
-    }
-  }
-
-
-  root_block_device {
-    volume_size = var.disk_size
-    volume_type = var.disk_type
-    iops        = var.disk_type == "io1" || var.disk_type == "io2" ? var.disk_iops : null
-  }
-
-  tags = {
-    Name        = "${var.application_version}-cores-${count.index + 1}-${var.creator}"
-    GeneratedBy = "Dell Terraform Module"
-    Release     = var.application_version
-    Creator     = var.creator
-  }
+  depends_on          = [module.internal_security_group]
+}
+  
+module "co-res-disk" {
+  source              = "./submodules/co_res_disk"
+  application_version = var.application_version
+  aws_storage_az      = var.availability_zones
+  creator             = var.creator
+  disk_count          = var.disk_count
+  disk_size           = var.disk_size
+  instance_count      = var.instance_count
+  timestamp           = local.timestamp
+  encrypted           = var.encrypted
 }
 
-output "management_ids" {
-  description = "The ID's of the management instances"
-  value       = [aws_instance.cores_instance[0].id,aws_instance.cores_instance[1].id,aws_instance.cores_instance[2].id]
-}
-
-output "management_ips" {
-  description = "The ip's of the management instances"
-  value       = [aws_instance.cores_instance[0].private_ip,aws_instance.cores_instance[1].private_ip,aws_instance.cores_instance[2].private_ip]
-}
-
-output "co_res_ips" {
-  description = "The private ip's of the co-res servers"
-  value       =  aws_instance.cores_instance.*.private_ip
+module "co-res-server" {
+  source              = "./submodules/co_res_server"
+  ami                 = data.aws_ami.cores_ami.id
+  application_version = var.application_version
+  aws_storage_az      = var.availability_zones
+  creator             = var.creator
+  disk_count          = var.disk_count
+  instance_count      = var.instance_count
+  instance_type       = var.instance_type
+  key_id              = aws_key_pair.powerflex_key.key_name
+  security_group_ids  = concat(module.internal_security_group.security_group_ids, [var.vpn_security_group])
+  subnet_ids          = var.subnet_ids
+  timestamp           = local.timestamp
+  user_data           = data.template_file.user_data.rendered
+  volume_ids          = module.co-res-disk.volume_ids
+  encrypted           = var.encrypted
 }
 
 resource "null_resource" "wait_for_instance" {
   #count = aws_instance.cores_instance.count
 
-  depends_on = [aws_instance.cores_instance]
+  depends_on = [module.installer-server]
  
   provisioner "remote-exec" {
     
     connection {
       type        = "ssh"
-      host        = aws_instance.installer_instance[0].private_ip
+      host        = module.installer-server.installer_ip
+
       user = var.install_node_user
       private_key = file(var.private_key_path)
       bastion_host        = var.bastion_config.use_bastion ? var.bastion_config.bastion_host : null
@@ -213,4 +150,28 @@ resource "null_resource" "wait_for_instance" {
       "echo Instance is ready for SSH"
     ]
   }
+}
+
+output "management_ids" {
+  description = "The ID's of the management instances"
+  value       = module.co-res-server.management_ids
+}
+
+output "management_ips" {
+  description = "The ip's of the management instances"
+  value       = module.co-res-server.management_ips
+}
+
+output "co_res_ips" {
+  description = "The private ip's of the co-res servers"
+  value       =  module.co-res-server.co_res_ips
+}
+output "device_mapping" {
+  description = "The device mapping of the disks"
+  value       =  module.co-res-server.device_mapping
+}
+
+output "installer_ip" {
+  description = "The private ip of the installer server"
+  value       = module.installer-server.installer_ip
 }

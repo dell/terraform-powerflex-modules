@@ -47,6 +47,9 @@ locals {
 
 resource "null_resource" "copy_executer" {
   count = var.bastion_config.use_bastion ? 1 : 0
+  triggers = {
+    always_run = timestamp()
+  }
   provisioner "local-exec" {
     when    = create 
     working_dir = "${path.module}"
@@ -61,20 +64,27 @@ resource "null_resource" "copy_executer" {
 
 resource "null_resource" "installer_executer_local" {
   count = var.bastion_config.use_bastion ? 0 : 1
+  triggers = {
+    always_run = timestamp()
+  }
   provisioner "local-exec" {
     when    =  create
     working_dir = "${path.module}"
+    #working_dir = "${local.relative_path}/${var.executer_location}"
     interpreter = var.interpreter
      command = <<-EOT
       echo 'Running local provisioner'
-      cd ${local.relative_path}/${var.executer_location}; chmod +x ./run_installer.sh
-      cd ${local.relative_path}/${var.executer_location}; ./run_installer.sh
+      cd ${var.executer_location};chmod +x ./run_installer.sh
+      cd ${var.executer_location}; ./run_installer.sh
      EOT
   }
 }
 
 resource "null_resource" "installer_executer_remote" {
   count = var.bastion_config.use_bastion ? 1 : 0
+  triggers = {
+    always_run = timestamp()
+  }
   provisioner "remote-exec" {
     when       = create
     inline     = [

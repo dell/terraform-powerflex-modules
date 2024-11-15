@@ -154,7 +154,7 @@ resource terraform_data sdc_pkg_remote {
 # # STEP 3 - install pre-requisites (scini module)
 # # provisioner to install scini module on SDC
 resource "terraform_data" "linux_scini" {
-  count = ( var.scini.linux_distro == "RHEL" || var.scini.autobuild_scini) ? 0 : 1
+  count = var.scini.autobuild_scini ? 0 : 1
   connection {
     type = "ssh"
     user = self.output.user.name
@@ -177,12 +177,13 @@ resource "terraform_data" "linux_scini" {
       }
       ip = var.ip
       scini_url = var.scini.url
+      distro = var.scini.linux_distro
   }
 
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p /bin/emc/scaleio/scini_sync/driver_cache/Ubuntu/${local.pflex_v}/${local.kernel_v}",
-      "wget ${self.output.scini_url}/scini.ko -P /bin/emc/scaleio/scini_sync/driver_cache/Ubuntu/${local.pflex_v}/${local.kernel_v}",
+      "mkdir -p /bin/emc/scaleio/scini_sync/driver_cache/${self.output.distro}/${local.pflex_v}/${local.kernel_v}",
+      "wget ${self.output.scini_url}/scini.ko -P /bin/emc/scaleio/scini_sync/driver_cache/${self.output.distro}/${local.pflex_v}/${local.kernel_v}",
     ]
   }
   provisioner "remote-exec" {
@@ -196,7 +197,7 @@ resource "terraform_data" "linux_scini" {
 # # provisioner to install scini module on SDC
 resource "terraform_data" "linux_scini_auto" {
   # Execute when autobuild flag is set and if it is not RHEL
-  count = ( var.scini.linux_distro != "RHEL" && var.scini.autobuild_scini) ? 1 : 0
+  count = var.scini.autobuild_scini ? 1 : 0
   connection {
     type = "ssh"
     user = self.output.user.name

@@ -80,6 +80,9 @@ locals {
 
 
 resource "null_resource" "run_new_installer_api" {
+  triggers = {
+    always_run = timestamp()
+  }
   provisioner "local-exec" {
     working_dir = "${path.module}"
     interpreter = var.interpreter
