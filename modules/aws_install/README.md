@@ -14,6 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -31,7 +32,9 @@ No requirements.
 |------|--------|---------|
 | <a name="module_copy-installation-scripts"></a> [copy-installation-scripts](#module\_copy-installation-scripts) | ./submodules/copy_installation_scripts | n/a |
 | <a name="module_execute-installer-api"></a> [execute-installer-api](#module\_execute-installer-api) | ./submodules/execute_installer_api | n/a |
+| <a name="module_get_hostnames"></a> [get\_hostnames](#module\_get\_hostnames) | ./submodules/get_hostnames_script | n/a |
 | <a name="module_prepare-installer-api"></a> [prepare-installer-api](#module\_prepare-installer-api) | ./submodules/installer_api | n/a |
+| <a name="module_remove-on-destroy"></a> [remove-on-destroy](#module\_remove-on-destroy) | ./submodules/remove_on_destroy | n/a |
 
 ## Resources
 
@@ -56,13 +59,9 @@ No requirements.
 | <a name="input_loadbalancer_dns"></a> [loadbalancer\_dns](#input\_loadbalancer\_dns) | the load balancer dns domain name | `string` | n/a | yes |
 | <a name="input_loadbalancer_ip"></a> [loadbalancer\_ip](#input\_loadbalancer\_ip) | the load balancer IP | `string` | n/a | yes |
 | <a name="input_management_ips"></a> [management\_ips](#input\_management\_ips) | the list of mno private ips | `list(string)` | n/a | yes |
-| <a name="input_mgmt_lb_range"></a> [mgmt\_lb\_range](#input\_mgmt\_lb\_range) | Management load balancer IP range | `string` | `"10.55.143.132-10.55.143.135"` | no |
 | <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Enable multi-AZ deployment | `bool` | `false` | no |
-| <a name="input_node_hostnames"></a> [node\_hostnames](#input\_node\_hostnames) | List of node hostnames | `list(string)` | <pre>[<br>  "node1",<br>  "node2",<br>  "node3"<br>]</pre> | no |
 | <a name="input_node_ips"></a> [node\_ips](#input\_node\_ips) | List of node IPs | `list(string)` | n/a | yes |
 | <a name="input_number_of_disks"></a> [number\_of\_disks](#input\_number\_of\_disks) | Number of disks per instance | `number` | `1` | no |
-| <a name="input_pfmp_hostname"></a> [pfmp\_hostname](#input\_pfmp\_hostname) | Prefix to use with hostnames | `string` | `"dellpowerflex.com"` | no |
-| <a name="input_prefix"></a> [prefix](#input\_prefix) | Prefix to use with hostnames | `string` | `""` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | n/a | `string` | `"~/.ssh/id_rsa"` | no |
 
 ## Outputs

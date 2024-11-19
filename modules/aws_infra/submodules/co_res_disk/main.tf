@@ -37,7 +37,7 @@ resource "aws_ebs_volume" "powerflex-co-res-volume" {
   count      = var.instance_count * var.disk_count
   size       = var.disk_size
   type       = "gp3"
-  iops       = 3000
+  iops       = 4000
   throughput = 125
   encrypted = var.encrypted
   tags = {

@@ -31,6 +31,9 @@ Before you can use this module, you need to have the following:
 
 To create the custom VPC, subnet, and security group, you can use the AWS Management Console or the AWS CLI.
 
+- A custom VPC (Enabled DNS settings) allowing with a subnet and security group that allows all traffic from a specific CIDR block.
+- Before using this module, please make sure you have `dos2unix` installed on your local machine.
+
 ## Optional Jump Host
 
 If you want to use a jump host to access your EC2 instances, you can configure the module to do so. To do this, you need to provide the SSH key pair and the jump(bastion) host details. Provide ssh key details in bastion configuration in tfvars file. Linux jump host is supported. 
@@ -42,13 +45,27 @@ To generate an SSH key pair, for ssh to powerflex nodes, you can use the followi
 
 This will generate a private key file named 'key_pair' and public key file named key_pair.pub.
 
+## Support Matrix
+
+This module supports the following operating systems:
+
+- Linux (for both the local machine and the bastion host, if used)
+
+This module is tested with Terraform version `1.9.x`.
+
+The only supported configurations are performance and balanced deployment types. Current support is 
+
+- Performance deployment: Includes 3 instances.
+- Balanced deployment: Includes 5 instances.
+- If the multi_az flag is set to true, the balanced deployment supports 6 instances.
+
 ## Usage
 
 1. Get the module to your local machine.
 
 2. Navigate to the code examples folder
 
-3. Create the terraform.tfvars file using sample file provided.
+3. Create the terraform.tfvars file using sample file provided. Check individual module documentation to adjust any other variables values and update main.tf if required. 
 
 4. Update provider.tf with your profile and region.
 

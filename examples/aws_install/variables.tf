@@ -18,15 +18,16 @@
 
 # variables.tf
 
-variable "cluster_name" {
-  description = "Name of the cluster"
-  type        = string
+variable "ami" {
+  description = "Map of AMI ids for installer and co-res"
+  type        = map(string)
+  default =    {} 
+  # example
+  # default = {
+  #  "installer" = "ami-123"
+  #  "co-res" = "ami-456"
+  #}
 }
-
-#variable "ami" {
-#  description = "Map of AMI ids for installer and co-res"
-#  type        = map(string)
-#}
 
 variable "creator" {
   description = "Name of the creator. This will be used in the name of resources and/or tags"
@@ -57,7 +58,7 @@ variable "multi_az" {
 }
 
 variable "instance_type" {
-  description = "Type of the EC2 instance"
+  description = "Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced."
   type        = string
   default     = "i3en.12xlarge"
 }
@@ -102,35 +103,12 @@ variable "application_version" {
     default = "4.6"
 }
 
-variable "disk_bandwidth" {
-  description = "Disk bandwidth in MB/s"
-  type        = number
-  default     = 250
-}
-
-variable "disk_count" {
-  description = "Number of disks"
-  type        = number
-  default     = 10
-}
-
-variable "disk_iops" {
-  description = "Provisioned IOPS for the disk (only for io1 and io2)"
-  type        = number
-  default     = 3000
-}
-
 variable "disk_size" {
-  description = "Size of the disk in GB"
+  description = "Size of the disk in GB, size of disk can be: 500GB, 1TB, 2TB, 4TB "
   type        = number
-  default     = 100
+  default     = 500
 }
 
-variable "disk_type" {
-  description = "Type of the disk (gp2, gp3, io1, io2, st1, sc1)"
-  type        = string
-  default     = "gp2"
-}
 variable "security_group" {
   type    = string
   description = "Security group"
@@ -145,4 +123,10 @@ variable "interpreter" {
   type    = list(string)
   #default = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]
   default = ["/bin/bash", "-c"]
+}
+
+variable "instance_count" {
+  description = "Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi_az is true, balanced should have 6 instances."
+  type        = number
+  default     = 3
 }

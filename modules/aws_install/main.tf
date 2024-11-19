@@ -70,6 +70,7 @@ module "prepare-installer-api" {
   timestamp                      = local.timestamp
   multi_az                       = var.multi_az
   hostnames                      = module.get_hostnames.hostnames
+  depends_on                     = [module.get_hostnames]
 }
 
 module "execute-installer-api" {
@@ -77,4 +78,11 @@ module "execute-installer-api" {
   bastion_config      = var.bastion_config
   interpreter                    = var.interpreter
   executer_location = module.prepare-installer-api.output_directory
+  depends_on = [module.prepare-installer-api]
+}
+
+module "remove-on-destroy" {
+  source              = "./submodules/remove_on_destroy"
+  files_to_remove     = concat([module.prepare-installer-api.output_directory],["/tmp/hostnames_output.txt"])
+  bastion_config      = var.bastion_config
 }

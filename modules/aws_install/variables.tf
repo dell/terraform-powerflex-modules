@@ -62,11 +62,6 @@ variable "loadbalancer_ip" {
   type = string
   description = "the load balancer IP"
 }
-variable "prefix" {
-  description = "Prefix to use with hostnames"
-  type        = string
-  default     = ""
-}
 
 variable "node_ips" {
   description = "List of node IPs"
@@ -79,11 +74,6 @@ variable "application_version" {
     default = "4.6"
 }
 
-variable "pfmp_hostname" {
-  description = "Prefix to use with hostnames"
-  type        = string
-  default     = "dellpowerflex.com"
-}
 
 # variables.tf
 

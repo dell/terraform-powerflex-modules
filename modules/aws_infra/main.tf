@@ -46,6 +46,7 @@ data "aws_subnet" "selected" {
 }
 
 data "aws_ami" "installer_ami" {
+  count = lookup(var.ami, "installer", "")  == "" ? 1 : 0
   most_recent = true
 
   filter {
@@ -55,9 +56,6 @@ data "aws_ami" "installer_ami" {
 
 }
 
-output "installer_ami_id" {
-  value = data.aws_ami.installer_ami.id
-}
 module "internal_security_group" {
   source              = "./submodules/internal_security_group"
   application_version = var.application_version
@@ -70,27 +68,28 @@ module "internal_security_group" {
 }
 
 resource "aws_key_pair" "powerflex_key" {
-  key_name   = "pflex-key-var.creator"
+  key_name   = "pflex-key-${var.creator}"
   public_key = file(var.key_path)
 }
 
 data "aws_ami" "cores_ami" {
+  count = lookup(var.ami, "co-res", "")  == "" ? 1 : 0
   most_recent = true
 
   filter {
     name = "name"
     values = ["ABS co-res ${var.application_version}"]
   }
-
 }
 
-output "cores_ami_id" {
-  value = data.aws_ami.cores_ami.id
+locals {
+  cores_ami = lookup(var.ami, "co-res", data.aws_ami.cores_ami[0].id)
+  installer_ami = lookup(var.ami, "installer", data.aws_ami.installer_ami[0].id)
 }
 
 module "installer-server" {
   source              = "./submodules/installer_server"
-  ami                 = data.aws_ami.installer_ami.id
+  ami                 = local.installer_ami
   application_version = var.application_version
   creator             = var.creator
   instance_type       = "t3.xlarge" #lookup(var.instance_type, "installer")
@@ -116,7 +115,7 @@ module "co-res-disk" {
 
 module "co-res-server" {
   source              = "./submodules/co_res_server"
-  ami                 = data.aws_ami.cores_ami.id
+  ami                 = local.cores_ami
   application_version = var.application_version
   aws_storage_az      = [for s in data.aws_subnet.selected : s.availability_zone]
   creator             = var.creator
@@ -130,6 +129,9 @@ module "co-res-server" {
   user_data           = data.template_file.user_data.rendered
   volume_ids          = module.co-res-disk.volume_ids
   encrypted           = var.encrypted
+  deployment_type     = var.deployment_type
+  multi_az            = var.multi_az
+  depends_on          = [module.internal_security_group, module.co-res-disk]
 }
 
 resource "null_resource" "wait_for_instance" {

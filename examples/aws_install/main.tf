@@ -26,13 +26,15 @@ module "aws_infra" {
   vpn_security_group = var.security_group
   multi_az = var.multi_az
   instance_type = var.instance_type
+  instance_count = var.instance_count
   deployment_type = var.deployment_type
   key_path = var.key_path
   private_key_path = var.private_key_path
   creator                = var.creator
   application_version    = var.application_version
   bastion_config = var.bastion_config
-   private_subnet_cidr = var.private_subnet_cidr
+  private_subnet_cidr = var.private_subnet_cidr
+  disk_size = var.disk_size
 }
 
 module "load-balancer" {
@@ -66,3 +68,7 @@ module "aws_install" {
   depends_on             = [module.load-balancer]
 }
 
+output "loadbalancer_private_ip" {
+  description = "The dns IP of the loadbalancer. Apex block management webui can be accessed from this IP."
+  value       = module.load-balancer.loadbalancer_private_ip
+}

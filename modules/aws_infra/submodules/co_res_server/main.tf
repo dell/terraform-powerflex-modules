@@ -61,6 +61,16 @@ variable "encrypted" {
   description = "the encryption status of the root volume"
   default = false
 }
+variable "deployment_type" {
+  description = "Type of deployment setup - performance or balanced"
+  type        = string
+}
+
+variable "multi_az" {
+  description = "Enable multi-AZ deployment"
+  type        = bool
+}
+
 
 resource "aws_network_interface" "powerflex-co-res-network-interface" {
   count             = var.instance_count
@@ -84,6 +94,26 @@ resource "aws_instance" "powerflex-co-res-ec2" {
   user_data = var.user_data
   # the Public SSH key
   key_name = var.key_id
+
+  lifecycle {
+    precondition  {
+        condition     = var.multi_az ? length(var.aws_storage_az) >= 2 : true
+        error_message = "When multi_az is enabled, you must specify at least two availability zones."
+    }
+    precondition  {
+        condition     = var.deployment_type == "balanced" || var.deployment_type == "performance" ? true : false
+        error_message = "Deployment type should be either balanced or performance."
+    }
+    precondition  {
+        condition     = var.instance_count == (var.deployment_type == "performance" ? 3 : 5)
+        error_message = "You must create  ${var.deployment_type == "performance" ? 3 : 5} instances."
+    }
+    precondition  {
+        condition     =  var.multi_az && var.deployment_type == "balanced" ? var.instance_count == 6 : true
+        error_message = "You must create  6 instances for multizone."
+    }
+  }
+
   tags = {
     Name        = "${var.application_version}-co-res-${count.index + 1}-${var.creator}-${var.timestamp}"
     GeneratedBy = "Dell terraform PowerFlex"

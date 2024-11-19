@@ -62,7 +62,7 @@ resource "null_resource" "execute-gethosts-script" {
       "/tmp/get_hostnames.sh ${join(" ", var.management_ips)} > /tmp/hostnames_output.txt"
     ]
   }
-
+  depends_on = [null_resource.copy-gethosts-script]
 }
 
 # Define the null_resource to execute the SCP command
@@ -71,13 +71,14 @@ resource "null_resource" "scp_remote_file_bastion" {
   provisioner "local-exec" {
     interpreter = var.interpreter
     command = <<EOT
-      scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${var.bastion_config.bastion_ssh_key}  ${var.bastion_config.bastion_user}@${var.bastion_config.bastion_host} nc %h %p"   -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt  ${path.module}/.
+      scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${var.bastion_config.bastion_ssh_key}  ${var.bastion_config.bastion_user}@${var.bastion_config.bastion_host} nc %h %p"   -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt /tmp/.
     EOT
   }
 
   triggers = {
     always_run = "${timestamp()}"
   }
+  depends_on = [null_resource.execute-gethosts-script]
 }
 
 # Define the null_resource to execute the SCP command
@@ -86,18 +87,20 @@ resource "null_resource" "scp_remote_file" {
   provisioner "local-exec" {
     interpreter = var.interpreter
     command = <<EOT
-      scp -o StrictHostKeyChecking=no -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt ${path.module}/.
+      scp -o StrictHostKeyChecking=no -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt /tmp/.
     EOT
   }
 
   triggers = {
     always_run = "${timestamp()}"
   }
+  depends_on = [null_resource.execute-gethosts-script]
 }
 
 
 data "local_file" "hostnames_output" {
-  filename = "${path.module}/hostnames_output.txt"
+  filename = "/tmp/hostnames_output.txt"
+  depends_on = [null_resource.scp_remote_file, null_resource.scp_remote_file_bastion]
 }
 
 locals {

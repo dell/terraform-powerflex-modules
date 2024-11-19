@@ -14,6 +14,7 @@ for IP_ADDRESS in "$@"; do
   if [ -z "$HOSTNAME" ]; then
     HOSTNAME="$IP_ADDRESS"
   fi
-  
-  echo "$HOSTNAME"
+  # Check if the hostname ends with a dot
+  SANITIZED_HOSTNAME=$(echo "$HOSTNAME" | awk '{if (length($0) > 0 && substr($0, length($0), 1) == ".") {print substr($0, 1, length($0) - 1)} else {print $0}}')
+  echo "$SANITIZED_HOSTNAME"
 done

@@ -19,8 +19,8 @@ variable "ami" {
   description = "AMI ID"
   type = map(string)
   default = {
-    "installer" = "ami-installer"
-    "co-res" = "ami-co-res"
+   # "installer" = "ami-installer"
+   # "co-res" = "ami-co-res"
   }
 }
 
@@ -29,12 +29,6 @@ variable "application_version" {
     description = "Application Version"
     type = string
     default = "4.6"
-}
-
-variable "availability_zones" {
-  description = "List of availability zones to use"
-  type        = list(string)
-  default     = ["us-east-1a"]
 }
 
 variable "creator" {
@@ -61,55 +55,26 @@ variable "device_names" {
   default     = ["sdf", "sdg", "sdh", "sdi", "sdj", "sdk", "sdl", "sdm", "sdn", "sdo", "sdp"]
 }
 
-variable "disk_bandwidth" {
-  description = "Disk bandwidth in MB/s"
-  type        = number
-  default     = 250
-}
-
 variable "disk_count" {
   description = "Number of disks"
   type        = number
   default     = 10
 }
 
-variable "disk_iops" {
-  description = "Provisioned IOPS for the disk (only for io1 and io2)"
-  type        = number
-  default     = 3000
-}
-
 variable "disk_size" {
-  description = "Size of the disk in GB"
+  description = "Size of the disk in GB, size of disk can be: 500GB, 1TB, 2TB, 4TB"
   type        = number
-  default     = 100
-}
-
-variable "disk_type" {
-  description = "Type of the disk (gp2, gp3, io1, io2, st1, sc1)"
-  type        = string
-  default     = "gp2"
-}
-
-variable "generated_username" {
-  type    = string
-  default = "pflex-user"
-}
-
-
-variable "password" {
-  type    = string
-  default = "Password"
+  default     = 500
 }
 
 variable "instance_count" {
-  description = "Number of instances to create"
+  description = "Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi_az is true, balanced should have 6 instances."
   type        = number
   default     = 3
 }
 
 variable "instance_type" {
-  description = "Type of the EC2 instance"
+  description = "Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced."
   type        = string
   default     = "i3en.12xlarge"
 }
@@ -165,6 +130,7 @@ variable "install_node_user" {
 }
 
 variable "template_file_name" {
+  description = "Template file name. It is fixed. Don't change."
   type    = string
   default = "user-data-pflex.tpl"
 }
