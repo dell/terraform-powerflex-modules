@@ -21,6 +21,8 @@ resource "null_resource" "sanitize_dir" {
     interpreter = var.interpreter
     command = <<-EOT
       export LANG=C.UTF-8
+      find . -type f -name "*.sh" -exec dos2unix {} \;
+      find . -type f -name "*.tf" -exec dos2unix {} \;
       dos2unix ./submodules/installer_api/main.tf
       dos2unix ./submodules/copy_installation_scripts/*.sh
       dos2unix ./submodules/reset_core_installation/*
@@ -38,6 +40,17 @@ module "copy-installation-scripts" {
   user                = var.install_node_user
   bastion_config      = var.bastion_config
 }
+
+module "get_hostnames" {
+  source              = "./submodules/get_hostnames_script"
+  bastion_config      = var.bastion_config
+  management_ips      = var.management_ips
+  host_ip             = var.installer_node_ip
+  user                = var.generated_username
+  private_key_path    = var.private_key_path
+  interpreter         = var.interpreter
+}
+
 # Copy the PFMP config to the installer vm
 
 
@@ -56,6 +69,7 @@ module "prepare-installer-api" {
   instance_type                  = var.instance_type
   timestamp                      = local.timestamp
   multi_az                       = var.multi_az
+  hostnames                      = module.get_hostnames.hostnames
 }
 
 module "execute-installer-api" {

@@ -68,6 +68,10 @@ variable "multi_az" {
   type        = bool
 }
 
+variable "hostnames" {
+  type = list(string)
+  description = "the list of hostnames to be used for the nodes"
+}
 
 locals {
   len = length(var.co_res_ips)
@@ -103,7 +107,7 @@ resource "null_resource" "run_new_installer_api" {
         ./convert_disk_mapping.sh ${join(",",var.device_mapping)}
       fi
       ./convert_csv_to_ips.sh ${join(" ",var.co_res_ips)}
-      ./create_rest_config_json.sh ${var.installer_ip} ${join(" ",var.management_ips)} ${var.loadbalancer_ip}
+      ./create_rest_config_json.sh ${var.installer_ip} ${join(" ",var.management_ips)} ${var.loadbalancer_ip} ${join(" ",var.hostnames)}
       cd ../ && rm -rf ./run-installer-scripts-${var.timestamp}/update_nvme_disk_mapping.sh ./run-installer-scripts-${var.timestamp}/get_nvme_disks.sh ./run-installer-scripts-${var.timestamp}/convert_disk_mapping.sh ./run-installer-scripts-${var.timestamp}/convert_csv_to_ips.sh ./run-installer-scripts-${var.timestamp}/create_rest_config_json.sh ./run-installer-scripts-${var.timestamp}/CSV_basic.csv ./run-installer-scripts-${var.timestamp}/PF_Installer_template.json ./run-installer-scripts-${var.timestamp}/core_deployment.csv
 
        # print all the system data (installer ip, loadbalancer ip/dns, nodes ips)  to system.out file

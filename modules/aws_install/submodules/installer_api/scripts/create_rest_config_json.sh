@@ -21,7 +21,9 @@ ip1_new=$2
 ip2_new=$3
 ip3_new=$4
 lb_IP_new=$5
-#lb_IP_new=`ping -n 1 $5 | grep -oP '\[\K[^\]]+'`
+host1=$6
+host2=$7
+host3=$8
 sed -i '{:q;N;s/\n/\\\\n/g;t q}' ./core_deployment.csv
 sed -i "s/\"/\\\\\\\\\"/g" ./core_deployment.csv
 csv_template=`cat ./core_deployment.csv`
@@ -29,9 +31,9 @@ end=$(echo $installer_ip | cut -d"." -f4)
 config_file="PF_Installer_$end.json"
 cp ./PF_Installer_template.json ./$config_file
 echo \"$csv_template\"
-host1=ip-$(echo ${ip1_new} | sed 's/\./-/g').ec2.internal
-host2=ip-$(echo ${ip2_new} | sed 's/\./-/g').ec2.internal
-host3=ip-$(echo ${ip3_new} | sed 's/\./-/g').ec2.internal
+#host1=ip-$(echo ${ip1_new} | sed 's/\./-/g').ec2.internal
+#host2=ip-$(echo ${ip2_new} | sed 's/\./-/g').ec2.internal
+#host3=ip-$(echo ${ip3_new} | sed 's/\./-/g').ec2.internal
 sed -i "s/IP1/${ip1_new}/g" ./$config_file
 sed -i "s/IP2/${ip2_new}/g" ./$config_file
 sed -i "s/IP3/${ip3_new}/g" ./$config_file

@@ -40,6 +40,11 @@ data "template_file" "user_data" {
   }
 }
 
+data "aws_subnet" "selected" {
+  for_each = toset(var.subnet_ids)
+  id       = each.value
+}
+
 data "aws_ami" "installer_ami" {
   most_recent = true
 
@@ -100,7 +105,7 @@ module "installer-server" {
 module "co-res-disk" {
   source              = "./submodules/co_res_disk"
   application_version = var.application_version
-  aws_storage_az      = var.availability_zones
+  aws_storage_az      = [for s in data.aws_subnet.selected : s.availability_zone]
   creator             = var.creator
   disk_count          = var.disk_count
   disk_size           = var.disk_size
@@ -113,7 +118,7 @@ module "co-res-server" {
   source              = "./submodules/co_res_server"
   ami                 = data.aws_ami.cores_ami.id
   application_version = var.application_version
-  aws_storage_az      = var.availability_zones
+  aws_storage_az      = [for s in data.aws_subnet.selected : s.availability_zone]
   creator             = var.creator
   disk_count          = var.disk_count
   instance_count      = var.instance_count

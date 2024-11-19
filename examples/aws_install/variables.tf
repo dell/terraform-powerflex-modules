@@ -23,17 +23,13 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "ami" {
-  description = "Map of AMI ids for installer and co-res"
-  type        = map(string)
-  default     = {
-    co-res    = "ami-085e25c4320e48e22"
-    installer = "ami-082522aee30d88d15"
-  }
-}
+#variable "ami" {
+#  description = "Map of AMI ids for installer and co-res"
+#  type        = map(string)
+#}
 
 variable "creator" {
-  description = "Name of the cluster"
+  description = "Name of the creator. This will be used in the name of resources and/or tags"
   type        = string
   default = "Dell"
 } 
@@ -46,18 +42,6 @@ variable "vpc_name" {
 variable "subnet_ids" {
   description = "Names of the default subnet"
   type        = list(string)
-}
-
-variable "aws_region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-east-1"
-}
-
-variable "availability_zones" {
-  description = "List of availability zones to use"
-  type        = list(string)
-  default     = ["us-east-1a"]
 }
 
 variable "deployment_type" {
@@ -79,41 +63,16 @@ variable "instance_type" {
 }
 
 variable "key_path" {
+  description = "Path to SSH public key"
   type    = string
   default = "~/.ssh/id_rsa.pub"
 }
 
 variable "private_key_path" {
+  description = "Path to SSH private key"
   type    = string
   default = "~/.ssh/id_rsa"
 }
-
-
-variable "remote_user" {
-  description = "Username for the remote connection"
-  type        = string
-  default     = "ec2-user"
-}
-
-variable "password" {
-  description = "Password for the Cluster nodes"
-  type        = string
-  default     = "Password123!"
-}
-
-variable "node_hostnames" {
-  description = "List of node hostnames"
-  type        = list(string)
-  default     = ["node1", "node2", "node3"]
-}
-
-variable "pfmp_hostname" {
-  description = "Prefix to use with hostnames"
-  type        = string
-  default     = "dellpowerflex.com"
-}
-
-# variables.tf
 
 variable "bastion_config" {
   description = "Bastion configuration"
@@ -172,7 +131,7 @@ variable "disk_type" {
   type        = string
   default     = "gp2"
 }
-variable "vpn_security_group" {
+variable "security_group" {
   type    = string
   description = "Security group"
 }
@@ -182,3 +141,8 @@ variable "private_subnet_cidr" {
   description = "the private cidr range"
 }
 
+variable "interpreter" {
+  type    = list(string)
+  #default = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]
+  default = ["/bin/bash", "-c"]
+}

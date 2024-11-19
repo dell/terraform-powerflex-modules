@@ -48,11 +48,6 @@ variable "management_ips" {
   description = "the list of mno private ips"
 }
 
-variable "node_hostnames" {
-  description = "List of node hostnames"
-  type        = list(string)
-  default     = ["node1", "node2", "node3"]
-}
 variable "generated_username" {
   type    = string
   default = "pflex-user"
@@ -76,12 +71,6 @@ variable "prefix" {
 variable "node_ips" {
   description = "List of node IPs"
   type        = list(string)
-}
-
-variable "mgmt_lb_range" {
-  description = "Management load balancer IP range"
-  type        = string
-  default = "10.55.143.132-10.55.143.135"
 }
 
 variable "application_version" {

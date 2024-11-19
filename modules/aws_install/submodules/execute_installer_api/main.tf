@@ -91,7 +91,7 @@ resource "null_resource" "installer_executer_remote" {
       "echo 'Running on bastion host'",
       "sleep 10",
       " cd /tmp; dos2unix ./run_installer.sh; dos2unix ./Rest_Config.json;",
-      " cd /tmp; chmod +x ./run_installer.sh; ./run_installer.sh;"
+      " cd /tmp; chmod +x ./run_installer.sh; ./run_installer.sh"
     ]
     connection {
       type        = "ssh"
