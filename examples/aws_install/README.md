@@ -94,5 +94,6 @@ No resources.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_loadbalancer_private_ip"></a> [loadbalancer\_private\_ip](#output\_loadbalancer\_private\_ip) | The dns IP of the loadbalancer. Apex block management webui can be accessed from this IP. |
+| <a name="output_loadbalancer_dns"></a> [loadbalancer\_dns](#output\_loadbalancer\_dns) | The DNS of the loadbalancer. |
+| <a name="output_loadbalancer_private_ip"></a> [loadbalancer\_private\_ip](#output\_loadbalancer\_private\_ip) | The IP of the loadbalancer. Apex block management webui can be accessed from this IP. |
 <!-- END_TF_DOCS -->

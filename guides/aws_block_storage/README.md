@@ -35,6 +35,7 @@ To create the custom VPC, subnet, and security group, you can use the AWS Manage
 - Before using this module, please make sure you have `dos2unix` installed on your local machine.
 
 ## Optional Jump Host
+To securely manage instances in private subnets, a bastion host (jump host) is required. Ensure that the bastion host is configured within the subnet and has access to the private subnet via SSH. Additionally, the subnet CIDR must allow inbound SSH (port 22) and HTTPS (port 443) traffic to facilitate secure connections and management.
 
 If you want to use a jump host to access your EC2 instances, you can configure the module to do so. To do this, you need to provide the SSH key pair and the jump(bastion) host details. Provide ssh key details in bastion configuration in tfvars file. Linux jump host is supported. 
 
@@ -102,5 +103,85 @@ You can modify `main.tf` if you don't want to run any specific module.
 To clean up the created resources, you can use the following command:
 `terraform destroy`
 
+## Verification
+
+To verify the successful installation, open your web browser and navigate to the load balancer's IP address. You should see the default web page or application interface indicating that the setup is complete.
+
+Example:
+`https://<load_balancer_ip>`
+
+Replace `<load_balancer_ip>` with the actual IP address of your load balancer displayed in the output after successful `terraform apply`. OR you can find it out from your AWS console. 
+
+## Troubleshooting
+
+### EC2 failures
+
+1. **EC2 Instance Creation Fails**
+   - **Error**: `Error launching source instance: UnauthorizedOperation: You are not authorized to perform this operation.`
+   - **Solution**: Ensure that your AWS credentials have the necessary permissions to create EC2 instances and you are logged in. Check your IAM policies and roles.
+
+2. **EBS Volume Attachment Issues**
+   - **Error**: `Error attaching EBS volume: VolumeInUse: vol-xxxxxx is already attached to an instance.`
+   - **Solution**: Verify that the EBS volume of same name is not already attached to another instance. Use the AWS Management Console or CLI to detach the volume if necessary.
+
+3. **Instance and Volume Recreation**
+   - **Issue**: EC2 instances and EBS volumes can not be attached.
+   - **Solution**: Ensure that you have access to the access zone specified for the subnet.
+
+### Remote Provisioners
+
+1. **Provisioner Script Fails to Execute**
+   - **Error**: `Error running command '...': exit status 1.`
+   - **Solution**: Check the script for syntax errors or missing dependencies. Ensure that the instance has the necessary permissions and network access to execute the script.
+
+2. **Timeout Issues**
+   - **Error**: `Error waiting for instance (i-xxxxxx) to become ready: timeout while waiting for state to become 'running'.`
+   - **Solution**: Make sure that instance is still reachable. Increase or add the `timeout` value in the failing provisioner configuration. For example:
+     ```hcl
+     provisioner "remote-exec" {
+       connection {
+         type        = "ssh"
+         user        = "ubuntu"
+         private_key = file("~/.ssh/id_rsa")
+         host        = self.public_ip
+       }
+
+       inline = [
+         "sudo apt-get update",
+         "sudo apt-get install -y nginx"
+       ]
+
+       timeout = "10m"
+     }
+     ```
+
+### Bastion Host
+
+1. **Connection Issues to Bastion Host**
+   - **Error**: `ssh: connect to host bastion.example.com port 22: Connection timed out.`
+   - **Solution**: Ensure that the security group associated with the bastion host allows inbound SSH traffic from your IP address. Verify the bastion host's IP and DNS settings.
+
+2. **Provisioning Scripts Fail on Bastion Host**
+   - **Error**: `Error running command '...': exit status 1.`
+   - **Solution**: Ensure that the script has the correct permissions and that the necessary software is installed on the bastion host.
+
+### Deployment failures
+
+1. **Connection Issues in deployment**
+   - **Error**: `DNS: errors in resolving hostnames or in getting hostnames.`
+   - **Solution**: Ensure that the security group associated has access to all nodes in cidr. VPC's hostname settings are selected while creating.
+
+   - **Error**: `ssh: errors in connecting to Installer.`
+   - **Solution**: Verify that the security group allows access to all nodes within the specified CIDR. Ensure the CIDR value defined in the variable matches the subnet’s CIDR.
+
+
+### General Tips
+
+- **Validate Configuration**: Always run `terraform validate` to check for syntax errors and configuration issues before applying changes.
+- **Check Logs**: Review the Terraform logs and AWS CloudTrail logs for detailed error messages and troubleshooting information.
+- **Update Providers**: Ensure that you are using the latest version of the Terraform AWS provider to benefit from bug fixes and new features.
+- **Apex Block Logs**: Find the installer IP either from the terraform log or from AWS console. 
+
+For more detailed troubleshooting steps, refer to the Terraform documentation.
 
 

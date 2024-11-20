@@ -74,8 +74,8 @@ resource "null_resource" "installer_executer_local" {
     interpreter = var.interpreter
      command = <<-EOT
       echo 'Running local provisioner'
-      cd ${var.executer_location};chmod +x ./run_installer.sh
-      cd ${var.executer_location}; ./run_installer.sh
+      cd ${local.relative_path}/${var.executer_location};chmod +x ./run_installer.sh
+      cd ${local.relative_path}/${var.executer_location}; ./run_installer.sh
      EOT
   }
 }

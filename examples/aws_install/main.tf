@@ -68,7 +68,13 @@ module "aws_install" {
   depends_on             = [module.load-balancer]
 }
 
+output "loadbalancer_dns" {
+  description = "The DNS of the loadbalancer."
+  value       = module.load-balancer.loadbalancer_dns
+}
+
+
 output "loadbalancer_private_ip" {
-  description = "The dns IP of the loadbalancer. Apex block management webui can be accessed from this IP."
+  description = "The IP of the loadbalancer. Apex block management webui can be accessed from this IP."
   value       = module.load-balancer.loadbalancer_private_ip
 }
