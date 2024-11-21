@@ -108,6 +108,7 @@ module "co-res-disk" {
   creator             = var.creator
   disk_count          = var.disk_count
   disk_size           = var.disk_size
+  deployment_type     = var.deployment_type
   instance_count      = var.instance_count
   timestamp           = local.timestamp
   encrypted           = var.encrypted
@@ -175,7 +176,7 @@ output "co_res_ips" {
 }
 output "device_mapping" {
   description = "The device mapping of the disks"
-  value       =  module.co-res-server.device_mapping
+  value       =  slice(module.co-res-server.device_mapping, 0, var.disk_count)
 }
 
 output "installer_ip" {

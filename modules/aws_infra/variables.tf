@@ -40,7 +40,7 @@ variable "creator" {
 variable "deployment_type" {
   description = "Type of deployment setup - performance or balanced"
   type        = string
-  default     = "performance" # Change to "balanced" for different setup
+  default     = "balanced" # Change to "performance" for different setup
   validation {
     condition     = var.deployment_type == "performance" || var.deployment_type == "balanced"
     error_message = "deployment_type must be either 'performance' or 'balanced'."
@@ -70,13 +70,13 @@ variable "disk_size" {
 variable "instance_count" {
   description = "Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi_az is true, balanced should have 6 instances."
   type        = number
-  default     = 3
+  default     = 5
 }
 
 variable "instance_type" {
-  description = "Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced."
+  description = "Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance in multi zone. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced."
   type        = string
-  default     = "i3en.12xlarge"
+  default     = "c5n.9xlarge"
 }
 
 variable "key_path" {

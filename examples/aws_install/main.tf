@@ -35,6 +35,7 @@ module "aws_infra" {
   bastion_config = var.bastion_config
   private_subnet_cidr = var.private_subnet_cidr
   disk_size = var.disk_size
+  disk_count = var.disk_count
 }
 
 module "load-balancer" {
@@ -77,4 +78,9 @@ output "loadbalancer_dns" {
 output "loadbalancer_private_ip" {
   description = "The IP of the loadbalancer. Apex block management webui can be accessed from this IP."
   value       = module.load-balancer.loadbalancer_private_ip
+}
+
+output "installer_ip" {
+  description = "The private ip of the installer server"
+  value       = module.aws_infra.installer_ip
 }

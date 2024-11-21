@@ -61,7 +61,6 @@ No requirements.
 | <a name="input_management_ips"></a> [management\_ips](#input\_management\_ips) | the list of mno private ips | `list(string)` | n/a | yes |
 | <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Enable multi-AZ deployment | `bool` | `false` | no |
 | <a name="input_node_ips"></a> [node\_ips](#input\_node\_ips) | List of node IPs | `list(string)` | n/a | yes |
-| <a name="input_number_of_disks"></a> [number\_of\_disks](#input\_number\_of\_disks) | Number of disks per instance | `number` | `1` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | n/a | `string` | `"~/.ssh/id_rsa"` | no |
 
 ## Outputs

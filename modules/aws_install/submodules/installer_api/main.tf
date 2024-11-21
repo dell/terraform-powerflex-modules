@@ -98,9 +98,9 @@ resource "null_resource" "run_new_installer_api" {
       dos2unix ./run-installer-scripts-${var.timestamp}/*
       chmod +x ./run-installer-scripts-${var.timestamp}/*
       cd ./run-installer-scripts-${var.timestamp}
-      if [[ ${var.instance_type} == *i3en.metal* ]];
+      if [[ ${var.instance_type} == *i3en.metal* ]] || [[ ${var.instance_type} == *i3en.12xlarge* ]];
       then
-        echo "co-res is bare metal type"
+        echo "co-res is performance type"
         ./update_nvme_disk_mapping.sh ${var.private_key} ${var.generated_username} ${join(" ",var.co_res_ips)}
       else
         echo "co-res is virtual type"

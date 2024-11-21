@@ -98,12 +98,6 @@ variable "device_mapping" {
   description = "the disk device mapping"
 }
 
-variable "number_of_disks" {
-  description = "Number of disks per instance"
-  type    = number
-  default = 1
-}
-
 variable "interpreter" {
   type    = list(string)
   #default = ["C:\\Program Files\\Git\\bin\\bash.exe", "-c"]

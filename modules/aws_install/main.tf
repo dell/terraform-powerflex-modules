@@ -65,7 +65,7 @@ module "prepare-installer-api" {
   loadbalancer_ip               = var.loadbalancer_ip
   
   interpreter                    = var.interpreter
-  device_mapping                 = slice(var.device_mapping, 0, var.number_of_disks)
+  device_mapping                 = var.device_mapping
   instance_type                  = var.instance_type
   timestamp                      = local.timestamp
   multi_az                       = var.multi_az

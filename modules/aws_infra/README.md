@@ -58,14 +58,14 @@ No requirements.
 | <a name="input_application_version"></a> [application\_version](#input\_application\_version) | Application Version | `string` | `"4.6"` | no |
 | <a name="input_bastion_config"></a> [bastion\_config](#input\_bastion\_config) | Bastion configuration | <pre>object({<br>    use_bastion    = bool<br>    bastion_host   = string<br>    bastion_user   = string<br>    bastion_ssh_key = string<br>  })</pre> | <pre>{<br>  "bastion_host": null,<br>  "bastion_ssh_key": "~/.ssh/id_rsa.pem",<br>  "bastion_user": "root",<br>  "use_bastion": false<br>}</pre> | no |
 | <a name="input_creator"></a> [creator](#input\_creator) | Name of the cluster | `string` | `"Dell"` | no |
-| <a name="input_deployment_type"></a> [deployment\_type](#input\_deployment\_type) | Type of deployment setup - performance or balanced | `string` | `"performance"` | no |
+| <a name="input_deployment_type"></a> [deployment\_type](#input\_deployment\_type) | Type of deployment setup - performance or balanced | `string` | `"balanced"` | no |
 | <a name="input_device_names"></a> [device\_names](#input\_device\_names) | the list of device names | `list(string)` | <pre>[<br>  "sdf",<br>  "sdg",<br>  "sdh",<br>  "sdi",<br>  "sdj",<br>  "sdk",<br>  "sdl",<br>  "sdm",<br>  "sdn",<br>  "sdo",<br>  "sdp"<br>]</pre> | no |
 | <a name="input_disk_count"></a> [disk\_count](#input\_disk\_count) | Number of disks | `number` | `10` | no |
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | Size of the disk in GB, size of disk can be: 500GB, 1TB, 2TB, 4TB | `number` | `500` | no |
 | <a name="input_encrypted"></a> [encrypted](#input\_encrypted) | the volume encryption flag | `bool` | `false` | no |
 | <a name="input_install_node_user"></a> [install\_node\_user](#input\_install\_node\_user) | Username for the remote connection | `string` | `"ec2-user"` | no |
-| <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi\_az is true, balanced should have 6 instances. | `number` | `3` | no |
-| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced. | `string` | `"i3en.12xlarge"` | no |
+| <a name="input_instance_count"></a> [instance\_count](#input\_instance\_count) | Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi\_az is true, balanced should have 6 instances. | `number` | `5` | no |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance in multi zone. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced. | `string` | `"c5n.9xlarge"` | no |
 | <a name="input_key_path"></a> [key\_path](#input\_key\_path) | n/a | `string` | `"~/.ssh/id_rsa.pub"` | no |
 | <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Enable multi-AZ deployment | `bool` | `false` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | n/a | `string` | `"~/.ssh/id_rsa"` | no |

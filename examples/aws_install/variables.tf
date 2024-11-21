@@ -48,11 +48,11 @@ variable "subnet_ids" {
 variable "deployment_type" {
   description = "Type of deployment setup - performance or balanced"
   type        = string
-  default     = "performance" # Change to "balanced" for different setup
+  default     = "balanced" # Change to "performance" for different setup
 }
 
 variable "multi_az" {
-  description = "Enable multi-AZ deployment"
+  description = "Enable multi-acceszone deployment"
   type        = bool
   default     = false
 }
@@ -60,7 +60,7 @@ variable "multi_az" {
 variable "instance_type" {
   description = "Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced."
   type        = string
-  default     = "i3en.12xlarge"
+  default     = "c5n.9xlarge"
 }
 
 variable "key_path" {
@@ -106,7 +106,7 @@ variable "application_version" {
 variable "disk_size" {
   description = "Size of the disk in GB, size of disk can be: 500GB, 1TB, 2TB, 4TB "
   type        = number
-  default     = 500
+  default     = 512
 }
 
 variable "security_group" {
@@ -128,5 +128,11 @@ variable "interpreter" {
 variable "instance_count" {
   description = "Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi_az is true, balanced should have 6 instances."
   type        = number
-  default     = 3
+  default     = 5
+}
+
+variable "disk_count" {
+  description = "Number of disks"
+  type        = number
+  default     = 10
 }

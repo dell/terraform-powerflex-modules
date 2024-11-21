@@ -70,6 +70,10 @@ variable "multi_az" {
   description = "Enable multi-AZ deployment"
   type        = bool
 }
+locals {
+  valid_disk_count = var.deployment_type == "performance" ? var.disk_count == 0 : var.disk_count == 10
+  valid_instance_type = var.deployment_type == "performance" ? var.instance_type == "i3en.12xlarge" || var.instance_type == "i3n.metal": var.instance_type == "c5n.9xlarge"
+}
 
 
 resource "aws_network_interface" "powerflex-co-res-network-interface" {
@@ -106,11 +110,19 @@ resource "aws_instance" "powerflex-co-res-ec2" {
     }
     precondition  {
         condition     = var.instance_count == (var.deployment_type == "performance" ? 3 : 5)
-        error_message = "You must create  ${var.deployment_type == "performance" ? 3 : 5} instances."
+        error_message = "You must create  ${var.deployment_type == "performance" ? 3 : 5} instances. That is current supported configuration."
     }
     precondition  {
         condition     =  var.multi_az && var.deployment_type == "balanced" ? var.instance_count == 6 : true
         error_message = "You must create  6 instances for multizone."
+    }
+    precondition {
+      condition     = local.valid_disk_count
+      error_message = "For performance, the disk count must be 0. For balanced, it must be 10 disks."
+    }
+    precondition {
+      condition     = local.valid_instance_type
+      error_message = "Check the supported instance types for the selected deployment."
     }
   }
 

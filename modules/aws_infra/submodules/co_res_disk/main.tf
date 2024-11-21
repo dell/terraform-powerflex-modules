@@ -32,6 +32,13 @@ variable "encrypted" {
   description = "the volume encryption flag"
   default = false
 }
+variable "deployment_type" {
+  description = "Type of deployment setup - performance or balanced"
+  type        = string
+}
+locals {
+  valid_disk_count = var.deployment_type == "performance" ? var.disk_count == 0 : var.disk_count == 10
+}
 
 resource "aws_ebs_volume" "powerflex-co-res-volume" {
   count      = var.instance_count * var.disk_count
@@ -47,6 +54,13 @@ resource "aws_ebs_volume" "powerflex-co-res-volume" {
     Creator     = var.creator
   }
   availability_zone = var.aws_storage_az[floor(count.index / var.disk_count) % length(var.aws_storage_az)]
+  lifecycle {
+    precondition {
+      condition     = local.valid_disk_count
+      error_message = "For performance, the disk count must be 0. For balanced, it must be 10 disks."
+    }
+  }
+   
 }
 
 output "volume_ids" {

@@ -60,6 +60,19 @@ The only supported configurations are performance and balanced deployment types.
 - Balanced deployment: Includes 5 instances.
 - If the multi_az flag is set to true, the balanced deployment supports 6 instances.
 
+### Supported AWS Instance Types and Storage Requirements
+
+#### Deployment Types and Instance Types
+
+- **Deployment type: performance**:
+  - Supported Instance Types: `i3en.metal` (Single AZ), `i3en.12xlarge` (Multi AZ)
+- **Deployment type: balanced**:
+  - Supported Instance Types: `c5n.9xlarge`
+  - Storage: 500GB, 1TB, 2TB, 4TB per disk and 10 disks per node
+
+Ensure that the instance types and storage configurations match the requirements for your specific deployment type to optimize performance and cost-efficiency.
+
+
 ## Usage
 
 1. Get the module to your local machine.
@@ -86,6 +99,8 @@ You will be prompted to confirm the changes. Type "yes" to proceed.
 8. Once the instances are created, you can verify them using the AWS Management Console or the AWS CLI.
 
 9. You can access Apex block cluster using load balancer IP. 
+
+10. Make sure to terminate installer ec2 instance after successful installation is done. 
 
 ## Configuration
 
@@ -132,7 +147,7 @@ Replace `<load_balancer_ip>` with the actual IP address of your load balancer di
 
 1. **Provisioner Script Fails to Execute**
    - **Error**: `Error running command '...': exit status 1.`
-   - **Solution**: Check the script for syntax errors or missing dependencies. Ensure that the instance has the necessary permissions and network access to execute the script.
+   - **Solution**: Check the script for syntax errors or missing dependencies. Ensure that the instance has the necessary permissions and network access to execute the script. In some cases, execute `dos2unix` on .tf and .sh files.
 
 2. **Timeout Issues**
    - **Error**: `Error waiting for instance (i-xxxxxx) to become ready: timeout while waiting for state to become 'running'.`
