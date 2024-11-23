@@ -31,13 +31,14 @@ Before you can use this module, you need to have the following:
 
 To create the custom VPC, subnet, and security group, you can use the AWS Management Console or the AWS CLI.
 
-- A custom VPC (Enabled DNS settings) allowing with a subnet and security group that allows all traffic from a specific CIDR block.
+- A custom VPC (Enabled DNS settings) along with a subnet and security group that allows all traffic from a specific CIDR block.
 - Before using this module, please make sure you have `dos2unix` installed on your local machine.
 
 ## Optional Jump Host
-To securely manage instances in private subnets, a bastion host (jump host) is required. Ensure that the bastion host is configured within the subnet and has access to the private subnet via SSH. Additionally, the subnet CIDR must allow inbound SSH (port 22) and HTTPS (port 443) traffic to facilitate secure connections and management.
 
-If you want to use a jump host to access your EC2 instances, you can configure the module to do so. To do this, you need to provide the SSH key pair and the jump(bastion) host details. Provide ssh key details in bastion configuration in tfvars file. Linux jump host is supported. 
+To securely manage instances in private subnets, a bastion host (jump host) is required. You don't need to configure bastion host if you can have access to your EC2 instances through VPN or directly. If you are going to use, ensure that the bastion host is configured within the subnet and has access to the private subnet via SSH. Additionally, the subnet CIDR must allow inbound SSH (port 22) and HTTPS (port 443) traffic to facilitate secure connections and management.
+
+If you want to use a jump host to access your EC2 instances, you can configure this module to do so. To configure, you need to provide the SSH key pair and the jump(bastion) host details. Provide ssh key details in bastion configuration in tfvars file. Linux jump host is supported.
 
 ### Generating SSH Key Pair
 
@@ -54,11 +55,15 @@ This module supports the following operating systems:
 
 This module is tested with Terraform version `1.9.x`.
 
-The only supported configurations are performance and balanced deployment types. Current support is 
+The only supported configuration tiers are performance and balanced deployment types. Current support is 
 
 - Performance deployment: Includes 3 instances.
 - Balanced deployment: Includes 5 instances.
 - If the multi_az flag is set to true, the balanced deployment supports 6 instances.
+
+### AMI Availability
+
+The AMI required in this module may not be available in all availability zones of AWS. Please, verify availability before starting.
 
 ### Supported AWS Instance Types and Storage Requirements
 
@@ -75,19 +80,25 @@ Ensure that the instance types and storage configurations match the requirements
 
 ## Usage
 
-1. Get the module to your local machine.
+1. Get the module to your local machine. To use this module, include it in your Terraform configuration as shown on terraform registry page for the module. 
 
-2. Navigate to the code examples folder
+2. Navigate to code examples folder
 
-3. Create the terraform.tfvars file using sample file provided. Check individual module documentation to adjust any other variables values and update main.tf if required. 
+3. Create the terraform.tfvars file using sample file provided. Check individual module documentation to adjust any other variables values and update main.tf if required.
 
 4. Update provider.tf with your profile and region.
+
+#### Key Points:
+
+- **Source and Version**: Specify the module source and version properly.
+- **Variables**: Include all required variables with appropriate values.
+- **Example Configuration**: Refer a complete example to help understand how to use the module.
+- **Inputs and Outputs**: Refer README.md for all inputs and outputs for clarity.
 
 5. Initialize the Terraform working directory.
  `
  terraform init
  `
-
 6. Review the Terraform plan to see the changes that will be made.
 `
 terraform plan
@@ -95,12 +106,11 @@ terraform plan
 7. Apply the Terraform configuration to deploy Dell Apex Block storgae.
 
 You will be prompted to confirm the changes. Type "yes" to proceed.
-
 8. Once the instances are created, you can verify them using the AWS Management Console or the AWS CLI.
 
-9. You can access Apex block cluster using load balancer IP. 
+9. You can access Apex block cluster using load balancer IP.
 
-10. Make sure to terminate installer ec2 instance after successful installation is done. 
+10. Make sure to terminate installer ec2 instance after successful installation is done.
 
 ## Configuration
 
@@ -116,6 +126,7 @@ You can modify `main.tf` if you don't want to run any specific module.
 ## Cleaning Up
 
 To clean up the created resources, you can use the following command:
+
 `terraform destroy`
 
 ## Verification
@@ -141,7 +152,7 @@ Replace `<load_balancer_ip>` with the actual IP address of your load balancer di
 
 3. **Instance and Volume Recreation**
    - **Issue**: EC2 instances and EBS volumes can not be attached.
-   - **Solution**: Ensure that you have access to the access zone specified for the subnet.
+   - **Solution**: Ensure that you have access to the acc zone specified for the subnet.
 
 ### Remote Provisioners
 
@@ -152,6 +163,7 @@ Replace `<load_balancer_ip>` with the actual IP address of your load balancer di
 2. **Timeout Issues**
    - **Error**: `Error waiting for instance (i-xxxxxx) to become ready: timeout while waiting for state to become 'running'.`
    - **Solution**: Make sure that instance is still reachable. Increase or add the `timeout` value in the failing provisioner configuration. For example:
+
      ```hcl
      provisioner "remote-exec" {
        connection {
@@ -178,7 +190,7 @@ Replace `<load_balancer_ip>` with the actual IP address of your load balancer di
 
 2. **Provisioning Scripts Fail on Bastion Host**
    - **Error**: `Error running command '...': exit status 1.`
-   - **Solution**: Ensure that the script has the correct permissions and that the necessary software is installed on the bastion host.
+   - **Solution**: Ensure that the script and user has the correct permissions and that the necessary software is installed on the bastion host.
 
 ### Deployment failures
 
@@ -193,7 +205,7 @@ Replace `<load_balancer_ip>` with the actual IP address of your load balancer di
 ### General Tips
 
 - **Validate Configuration**: Always run `terraform validate` to check for syntax errors and configuration issues before applying changes.
-- **Check Logs**: Review the Terraform logs and AWS CloudTrail logs for detailed error messages and troubleshooting information.
+- **Check Logs**: Review the Terraform logs and Apex block installer logs for detailed error messages and troubleshooting information.
 - **Update Providers**: Ensure that you are using the latest version of the Terraform AWS provider to benefit from bug fixes and new features.
 - **Apex Block Logs**: Find the installer IP either from the terraform log or from AWS console. 
 

@@ -69,6 +69,12 @@ private_subnet_cidr = ["172.1.0.0/24"]
 
 #the interpreter used for shell script (see the variables.tf for other example)
 interpreter = ["/bin/bash", "-c"]
+
+# Map of AMI ids for installer and co-res (optional). If not provided, it will try to find based on the application_version provided.
+ami = {
+    "installer" = "ami-123"
+    "co-res" = "ami-456"
+  }
 ```
 
 Refer guides and individual module's README.md file for more information and variables.
