@@ -41,8 +41,12 @@ data "template_file" "user_data" {
 }
 
 data "aws_subnet" "selected" {
-  for_each = toset(var.subnet_ids)
+  for_each = { for idx, id in var.subnet_ids : idx => id }
   id       = each.value
+}
+
+locals  {
+  availability_zones = [for idx in keys(data.aws_subnet.selected) : data.aws_subnet.selected[idx].availability_zone]
 }
 
 data "aws_ami" "installer_ami" {
@@ -62,8 +66,6 @@ module "internal_security_group" {
   creator             = var.creator
   vpc_id              = var.vpc_name
   multi_az            = var.multi_az
-  ## Update if you need to change from default values
-  #pods_cidr           = var.pods_cidr
   private_subnet_cidr = var.private_subnet_cidr
 }
 
@@ -99,12 +101,13 @@ module "installer-server" {
   timestamp           = local.timestamp
   user_data           = data.template_file.user_data.rendered
   depends_on          = [module.internal_security_group]
+
 }
   
 module "co-res-disk" {
   source              = "./submodules/co_res_disk"
   application_version = var.application_version
-  aws_storage_az      = [for s in data.aws_subnet.selected : s.availability_zone]
+  aws_storage_az      = local.availability_zones
   creator             = var.creator
   disk_count          = var.disk_count
   disk_size           = var.disk_size
@@ -118,7 +121,7 @@ module "co-res-server" {
   source              = "./submodules/co_res_server"
   ami                 = local.cores_ami
   application_version = var.application_version
-  aws_storage_az      = [for s in data.aws_subnet.selected : s.availability_zone]
+  aws_storage_az      = local.availability_zones
   creator             = var.creator
   disk_count          = var.disk_count
   instance_count      = var.instance_count

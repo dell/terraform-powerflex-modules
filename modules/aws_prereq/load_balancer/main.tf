@@ -118,7 +118,11 @@ data "aws_network_interface" "lb_interfaces" {
   count = 1
   filter {
     name   = "description"
-    values = ["ELB ${aws_lb.powerflex-network-lb.arn_suffix}"]
+   values = ["ELB ${aws_lb.powerflex-network-lb.arn_suffix}"]
+  }
+  filter {
+    name   = "subnet-id"
+    values = [var.subnet_ids[0]]
   }
 }
 

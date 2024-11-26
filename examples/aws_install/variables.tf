@@ -52,7 +52,7 @@ variable "deployment_type" {
 }
 
 variable "multi_az" {
-  description = "Enable multi-acceszone deployment"
+  description = "Enable multi availability zone deployment"
   type        = bool
   default     = false
 }

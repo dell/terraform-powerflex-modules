@@ -72,7 +72,7 @@ variable "multi_az" {
 }
 locals {
   valid_disk_count = var.deployment_type == "performance" ? var.disk_count == 0 : var.disk_count == 10
-  valid_instance_type = var.deployment_type == "performance" ? var.instance_type == "i3en.12xlarge" || var.instance_type == "i3n.metal": var.instance_type == "c5n.9xlarge"
+  valid_instance_type = var.deployment_type == "performance" ? var.instance_type == "i3en.12xlarge" || var.instance_type == "i3en.metal": var.instance_type == "c5n.9xlarge"
 }
 
 
@@ -109,12 +109,16 @@ resource "aws_instance" "powerflex-co-res-ec2" {
         error_message = "Deployment type should be either balanced or performance."
     }
     precondition  {
-        condition     = var.instance_count == (var.deployment_type == "performance" ? 3 : 5)
-        error_message = "You must create  ${var.deployment_type == "performance" ? 3 : 5} instances. That is current supported configuration."
+        condition     = var.deployment_type == "performance" ?  var.instance_count == 3 : true
+        error_message = "You must create 3 instances for performance. That is current supported configuration."
     }
     precondition  {
         condition     =  var.multi_az && var.deployment_type == "balanced" ? var.instance_count == 6 : true
         error_message = "You must create  6 instances for multizone."
+    }
+    precondition  {
+        condition     =  var.multi_az == false && var.deployment_type == "balanced" ? var.instance_count == 5 : true
+        error_message = "You must create 5 instances for balanced deployment."
     }
     precondition {
       condition     = local.valid_disk_count

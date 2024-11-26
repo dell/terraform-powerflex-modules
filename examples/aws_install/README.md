@@ -37,9 +37,6 @@ disk_count = 10
 #Number of instances. Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi_az is true, balanced should have 6 instances.
 instance_count = 3
 
-#Enable multi-acceszone deployment (boolean)
-multi_az = false
-  
 #Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance in multi zone. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced.
 instance_type = "i3en.12xlarge"
 #application version
@@ -75,6 +72,9 @@ ami = {
     "installer" = "ami-123"
     "co-res" = "ami-456"
   }
+  
+#Enable multi availability zone deployment (boolean)
+multi_az = false
 ```
 
 Refer guides and individual module's README.md file for more information and variables.
@@ -115,7 +115,7 @@ No resources.
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced. | `string` | `"c5n.9xlarge"` | no |
 | <a name="input_interpreter"></a> [interpreter](#input\_interpreter) | n/a | `list(string)` | <pre>[<br>  "/bin/bash",<br>  "-c"<br>]</pre> | no |
 | <a name="input_key_path"></a> [key\_path](#input\_key\_path) | Path to SSH public key | `string` | `"~/.ssh/id_rsa.pub"` | no |
-| <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Enable multi-acceszone deployment | `bool` | `false` | no |
+| <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Enable multi availability zone deployment | `bool` | `false` | no |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | Path to SSH private key | `string` | `"~/.ssh/id_rsa"` | no |
 | <a name="input_private_subnet_cidr"></a> [private\_subnet\_cidr](#input\_private\_subnet\_cidr) | the private cidr range | `list(string)` | n/a | yes |
 | <a name="input_security_group"></a> [security\_group](#input\_security\_group) | Security group | `string` | n/a | yes |

@@ -104,8 +104,12 @@ Ensure that the instance types and storage configurations match the requirements
 terraform plan
 `
 7. Apply the Terraform configuration to deploy Dell Apex Block storgae.
+`
+terraform apply
+`
 
 You will be prompted to confirm the changes. Type "yes" to proceed.
+
 8. Once the instances are created, you can verify them using the AWS Management Console or the AWS CLI.
 
 9. You can access Apex block cluster using load balancer IP.
