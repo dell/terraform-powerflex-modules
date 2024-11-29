@@ -43,15 +43,27 @@ If you want to use a jump host to access your EC2 instances, you can configure t
 ### Generating SSH Key Pair
 
 To generate an SSH key pair, for ssh to powerflex nodes, you can use the following command:
-`ssh-keygen -t rsa -b 4096 -f key_pair`
-
+```
+ssh-keygen -t rsa -b 4096 -f key_pair`
+```
 This will generate a private key file named 'key_pair' and public key file named key_pair.pub.
+Next, Define permissions for key. From the linux bastion execute:
+```
+chmod 600 id_rsa
+chmod 600 id_rsa.pub
+```
 
 ## Support Matrix
 
 This module supports the following operating systems:
 
 - Linux (for both the local machine and the bastion host, if used)
+- Windows with VSCode - GitBash
+
+  - [Install the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+  - [Configure AWS credentials and profile](https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-configure.html#configure-precedence)
+  - Update ../aws_install/provider.tf with your profile and region
+
 
 This module is tested with Terraform version `1.9.x`.
 
@@ -59,7 +71,7 @@ The only supported configuration tiers are performance and balanced deployment t
 
 - Performance deployment: Includes 3 instances.
 - Balanced deployment: Includes 5 instances.
-- If the multi_az flag is set to true, the balanced deployment supports 6 instances.
+- If the multi_az flag is set to true, the balanced deployment supports 6 instances. Two instances in each AZ.
 
 ### AMI Availability
 
@@ -96,25 +108,41 @@ Ensure that the instance types and storage configurations match the requirements
 - **Inputs and Outputs**: Refer README.md for all inputs and outputs for clarity.
 
 5. Initialize the Terraform working directory.
- `
- terraform init
- `
+     ```
+     terraform init -upgrade
+     ```
 6. Review the Terraform plan to see the changes that will be made.
-`
-terraform plan
-`
-7. Apply the Terraform configuration to deploy Dell Apex Block storgae.
-`
-terraform apply
-`
-
-You will be prompted to confirm the changes. Type "yes" to proceed.
+     ```
+    terraform plan -out main.tfplan
+     ```
+7. Apply the Terraform configuration to deploy Dell Apex Block storage.
+     ````
+    terraform apply main.tfplan
+     ````
 
 8. Once the instances are created, you can verify them using the AWS Management Console or the AWS CLI.
+9. See Monitor Installation below for instructions.
 
-9. You can access Apex block cluster using load balancer IP.
+10. You can access Apex block cluster (PowerFlex Manager UI) using the load balancer IP.
+   1.  PowerFlex UI default credentials admin / Admin123! ... you will be asked to change the password.
 
-10. Make sure to terminate installer ec2 instance after successful installation is done.
+11. Once the install is complete, you have the option to terminate installer ec2 instance after successful installation is done, as the installer is no longer needed.
+
+## Monitor Installation
+After the initial Terraform IaC completes, and the output configuration is returned, the installer IP can be used to monitor the complete deployment. The APEX Block management plane (PFMP) deployment will execute for a couple hours.
+
+The log to monitor is named bedrock.log
+
+1.    Establish an ssh connection from the bastion or a machine that can connect to the installer IP address.
+2. cd into /tmp directoy where the id_rsa key resides.
+3. ssh with ec2-user. Example where installer_IP = 10.0.0.21
+```
+ssh -i "id_rsa" ec2-user@10.0.0.21
+```
+4. Tail the log from this location. PFMP directoy will change over time. Confirm the proper location.
+```
+tail -f /tmp/bundle/pfmp_deployments/PFMP2-4.6.0.0-1258/logs/atlantic/bedrock.log
+```
 
 ## Configuration
 
@@ -130,9 +158,10 @@ You can modify `main.tf` if you don't want to run any specific module.
 ## Cleaning Up
 
 To clean up the created resources, you can use the following command:
-
-`terraform destroy`
-
+Option to use --auto-approve when no additional confirmation is necessary before destroy
+```
+terraform destroy --auto-approve
+```
 ## Verification
 
 To verify the successful installation, open your web browser and navigate to the load balancer's IP address. You should see the default web page or application interface indicating that the setup is complete.
