@@ -22,6 +22,26 @@ resource "null_resource" "remove_on_destroy" {
     when    = destroy
   }
 }
+resource "terraform_data" "delete_remote_files" {
+  input = {
+     user        = var.bastion_config.bastion_user
+     private_key = var.bastion_config.bastion_ssh_key
+     host        = var.bastion_config.bastion_host
+  }
+  provisioner "remote-exec" {
+    when       = destroy
+    inline     = [
+      " cd /tmp; rm -f ./run_installer.sh; rm -f ./Rest_Config.json; rm -f ./terraform_*.sh"
+
+    ]
+    connection {
+      type        = "ssh"
+      user        = self.output.user
+      private_key = file(self.output.private_key)
+      host        = self.output.host
+    }
+  }
+}
 
 #resource "null_resource" "remove_files_remote" {
 #  count = var.bastion_config.use_bastion ? 1 : 0

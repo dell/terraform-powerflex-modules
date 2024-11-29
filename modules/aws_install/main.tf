@@ -62,8 +62,8 @@ module "prepare-installer-api" {
   management_ips                 = var.management_ips
   generated_username             = var.generated_username
   loadbalancer_dns               = var.loadbalancer_dns
-  loadbalancer_ip               = var.loadbalancer_ip
-  
+  loadbalancer_ip                = var.loadbalancer_ip
+  bastion_config                 = var.bastion_config
   interpreter                    = var.interpreter
   device_mapping                 = var.device_mapping
   instance_type                  = var.instance_type

@@ -73,6 +73,16 @@ variable "hostnames" {
   description = "the list of hostnames to be used for the nodes"
 }
 
+variable "bastion_config" {
+  description = "Bastion configuration"
+  type = object({
+    use_bastion    = bool
+    bastion_host   = string
+    bastion_user   = string
+    bastion_ssh_key = string
+  })
+}
+
 locals {
   len = length(var.co_res_ips)
   csv_name = "${local.len == 3 && var.multi_az == false ? "3_co_res.csv" :
@@ -80,8 +90,101 @@ locals {
         local.len == 3 && var.multi_az == true ? "3_co_res_multi.csv" :
         local.len == 6 && var.multi_az == true ? "6_co_res.csv":
          ""}"
+  deployment_type_performance = var.instance_type == "i3en.12xlarge" || var.instance_type == "i3en.metal"
 }
 
+resource null_resource "create_directory" {
+  provisioner "local-exec" {
+    working_dir = "${path.module}"
+    interpreter = var.interpreter
+    command = <<EOT
+      mkdir -p ./run-installer-scripts-${var.timestamp}
+      cp -r scripts/* ./run-installer-scripts-${var.timestamp}
+      cp ./csv_templates/${local.csv_name} ./run-installer-scripts-${var.timestamp}/CSV_basic.csv
+      dos2unix ./run-installer-scripts-${var.timestamp}/*
+      chmod +x ./run-installer-scripts-${var.timestamp}/*
+    EOT
+  }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+}
+
+resource "null_resource" "execute-getnvme-remote-script" {
+  count = local.deployment_type_performance && !var.bastion_config.use_bastion ?  length(var.co_res_ips) : 0
+  connection {
+    type        = "ssh"
+    host        = var.co_res_ips[count.index]
+    user        = var.generated_username
+    private_key = file(var.private_key)
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo nvme list -o json | jq -c '.Devices[] | select(.ModelNumber == \"Amazon EC2 NVMe Instance Storage\")' | jq '.DevicePath' | sort | sed -z 's/\\n/,/g;s/,$/\\n/' | tr -d '\"' > /tmp/nvme_disks_${var.co_res_ips[count.index]}.txt"
+    ]
+  }
+  
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  depends_on = [null_resource.create_directory]
+}
+resource "null_resource" "copy-getnvme-remote-data" {
+  count = local.deployment_type_performance && !var.bastion_config.use_bastion ?  length(var.co_res_ips) : 0
+  provisioner "local-exec" {
+    working_dir = "${path.module}"
+    interpreter = var.interpreter
+    command = <<EOT
+      scp -i -i ${var.private_key} var.user@${var.co_res_ips[count.index]}:/tmp/nvme_disks_${var.co_res_ips[count.index]}.txt ./run-installer-scripts-${var.timestamp}/.
+    EOT
+  }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  depends_on = [null_resource.execute-getnvme-remote-script]
+}
+
+# Define the null_resource to execute the nvme command
+resource "null_resource" "execute-getnvme-bastion-script" {
+  count = local.deployment_type_performance && var.bastion_config.use_bastion ?  length(var.co_res_ips) : 0
+  
+  provisioner "remote-exec" {
+      connection {
+      type        = "ssh"
+      host        = var.co_res_ips[count.index]
+      user        = var.generated_username
+      private_key = file(var.private_key)
+      bastion_host        = var.bastion_config.use_bastion ? var.bastion_config.bastion_host : null
+      bastion_user        = var.bastion_config.use_bastion ? var.bastion_config.bastion_user : null
+      bastion_private_key = file(var.bastion_config.bastion_ssh_key)
+    }
+    inline = [
+            "sudo nvme list -o json | jq -c '.Devices[] | select(.ModelNumber == \"Amazon EC2 NVMe Instance Storage\")' | jq '.DevicePath' | sort | sed -z 's/\\n/,/g;s/,$/\\n/' | tr -d '\"' > /tmp/nvme_disks_${var.co_res_ips[count.index]}.txt"
+    ]
+  }
+ 
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  depends_on = [null_resource.create_directory]
+}
+
+resource "null_resource" "copy-getnvme-bastion-data" {
+  count = local.deployment_type_performance && var.bastion_config.use_bastion ?  length(var.co_res_ips) : 0
+  
+  provisioner "local-exec" {
+    interpreter = var.interpreter
+    working_dir = "${path.module}"
+    command = <<EOT
+      scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ${var.bastion_config.bastion_ssh_key}  ${var.bastion_config.bastion_user}@${var.bastion_config.bastion_host} nc %h %p"   -i ${var.private_key} ${var.generated_username}@${var.co_res_ips[count.index]}:/tmp/nvme_disks_${var.co_res_ips[count.index]}.txt ./run-installer-scripts-${var.timestamp}/.
+    EOT
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  depends_on = [null_resource.execute-getnvme-bastion-script]
+}
 
 resource "null_resource" "run_new_installer_api" {
   triggers = {
@@ -92,21 +195,22 @@ resource "null_resource" "run_new_installer_api" {
     interpreter = var.interpreter
     command = <<-EOT
       export LANG=C.UTF-8
-      mkdir ./run-installer-scripts-${var.timestamp}
-      cp -r ./scripts/* ./run-installer-scripts-${var.timestamp}
-      cp ./csv_templates/${local.csv_name} ./run-installer-scripts-${var.timestamp}/CSV_basic.csv
-      dos2unix ./run-installer-scripts-${var.timestamp}/*
-      chmod +x ./run-installer-scripts-${var.timestamp}/*
+      #mkdir ./run-installer-scripts-${var.timestamp}
+      #cp -r ./scripts/* ./run-installer-scripts-${var.timestamp}
+      #cp ./csv_templates/${local.csv_name} ./run-installer-scripts-${var.timestamp}/CSV_basic.csv
+      #dos2unix ./run-installer-scripts-${var.timestamp}/*
+      #chmod +x ./run-installer-scripts-${var.timestamp}/*
       cd ./run-installer-scripts-${var.timestamp}
       if [[ ${var.instance_type} == *i3en.metal* ]] || [[ ${var.instance_type} == *i3en.12xlarge* ]];
       then
         echo "co-res is performance type"
-        ./update_nvme_disk_mapping.sh ${var.private_key} ${var.generated_username} ${join(" ",var.co_res_ips)}
+        ./convert_ip_nvme_csv.sh ${join(" ",var.co_res_ips)}
       else
-        echo "co-res is virtual type"
+        echo "co-res is balanced type"
         ./convert_disk_mapping.sh ${join(",",var.device_mapping)}
+        ./convert_csv_to_ips.sh ${join(" ",var.co_res_ips)}
       fi
-      ./convert_csv_to_ips.sh ${join(" ",var.co_res_ips)}
+      
       ./create_rest_config_json.sh ${var.installer_ip} ${join(" ",var.management_ips)} ${var.loadbalancer_ip} ${join(" ",var.hostnames)}
       cd ../ && rm -rf ./run-installer-scripts-${var.timestamp}/update_nvme_disk_mapping.sh ./run-installer-scripts-${var.timestamp}/get_nvme_disks.sh ./run-installer-scripts-${var.timestamp}/convert_disk_mapping.sh ./run-installer-scripts-${var.timestamp}/convert_csv_to_ips.sh ./run-installer-scripts-${var.timestamp}/create_rest_config_json.sh ./run-installer-scripts-${var.timestamp}/CSV_basic.csv ./run-installer-scripts-${var.timestamp}/PF_Installer_template.json ./run-installer-scripts-${var.timestamp}/core_deployment.csv
 
@@ -132,7 +236,9 @@ resource "null_resource" "run_new_installer_api" {
 
     EOT
   }
+  depends_on = [null_resource.copy-getnvme-bastion-data,null_resource.copy-getnvme-remote-data]
 }
+
 output "output_directory" {
   description = "The location of the output directory"
   value       =  "${path.module}/run-installer-scripts-${var.timestamp}"

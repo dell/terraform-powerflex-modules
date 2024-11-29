@@ -45,6 +45,7 @@ module "load-balancer" {
   management_ids         = module.aws_infra.management_ids
   subnet_ids             = var.subnet_ids
   vpc_id                 = var.vpc_name
+  security_group         = var.security_group
   depends_on             = [module.aws_infra]
 }
 
@@ -58,7 +59,6 @@ module "aws_install" {
   loadbalancer_ip = module.load-balancer.loadbalancer_private_ip
   #node_hostnames = var.node_hostnames
   node_ips = module.aws_infra.management_ips
-  #pfmp_hostname = var.pfmp_hostname
   management_ips = module.aws_infra.management_ips
   instance_type = var.instance_type
   key_path = var.key_path

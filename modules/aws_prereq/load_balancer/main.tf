@@ -65,6 +65,11 @@ variable "subnet_ids" {
   description = "the load balancer subnet ids (private subnets)"
 }
 
+variable "security_group" {
+  type    = string
+  description = "Security group"
+}
+
 locals {
   timestamp = replace(replace(replace(timestamp(), "Z", ""), ":", ""), "-", "")
 }
@@ -95,6 +100,7 @@ resource "aws_lb" "powerflex-network-lb" {
   load_balancer_type         = "network"
   enable_deletion_protection = false
   subnets                    = var.subnet_ids
+  security_groups            = [var.security_group]
   tags = {
     Name        = "${var.application_version}-nlb-${var.creator}-${local.timestamp}"
     GeneratedBy = "Dell terraform module"
