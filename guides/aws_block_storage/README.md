@@ -94,11 +94,18 @@ Ensure that the instance types and storage configurations match the requirements
 
 1. Get the module to your local machine. To use this module, include it in your Terraform configuration as shown on terraform registry page for the module. 
 
-2. Navigate to code examples folder
+2. Navigate to code examples folder.
+   ```
+   cd examples/aws_install
+   ```
+4. Authenticate with AWS account and profile
+   ```
+   aws sso login --profile <YourProfileName>
+   ```
 
-3. Create the terraform.tfvars file using sample file provided. Check individual module documentation to adjust any other variables values and update main.tf if required.
+5. Create the terraform.tfvars file using sample file provided. Check individual module documentation to adjust any other variables values and update main.tf if required.
 
-4. Update provider.tf with your profile and region.
+6. Update provider.tf with your profile and region.
 
 #### Key Points:
 
