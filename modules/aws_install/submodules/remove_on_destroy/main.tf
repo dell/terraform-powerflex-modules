@@ -23,6 +23,7 @@ resource "null_resource" "remove_on_destroy" {
   }
 }
 resource "terraform_data" "delete_remote_files" {
+  count = var.bastion_config.use_bastion ? 1 : 0
   input = {
      user        = var.bastion_config.bastion_user
      private_key = var.bastion_config.bastion_ssh_key
@@ -32,7 +33,6 @@ resource "terraform_data" "delete_remote_files" {
     when       = destroy
     inline     = [
       " cd /tmp; rm -f ./run_installer.sh; rm -f ./Rest_Config.json; rm -f ./terraform_*.sh"
-
     ]
     connection {
       type        = "ssh"
