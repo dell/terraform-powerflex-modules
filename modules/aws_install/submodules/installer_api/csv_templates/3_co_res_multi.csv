@@ -1,7 +1,7 @@
 Domain,Username,Password,Operating System,IPs,Is MDM/TB,MDM Mgmt IP,MDM IPs,MDM Name,perfProfileForMDM,Virtual IPs,Virtual IP NICs,Is SDS,SDS Name,SDS All IPs,SDS-SDS Only IPs,SDS-SDC Only IPs,Protection Domain,Fault Set,SDS Storage Device List,StoragePool List,SDS Storage Device Names,perfProfileForSDS,Is SDC,perfProfileForSDC,SDC Name,RFcache,RFcache SSD Device List,RFcache Accelerated StoragePool List,NVDIMM Acceleration Device List,NVDIMM Acceleration Pool List,Is SDR,SDR Name,SDR Port,SDR Application IPs,SDR Storage IPs,SDR External IPs,SDR All IPs,Is Vasa Provider,Vasa Provider IP,Is SDT,SDT Name,SDT Storage Port,SDT NVME Port,SDT Discovery Port,SDT All IPs
-,pflex-user (sudo),,linux,,TB,IP1,IP1,TB,High,,,Yes,,IP1,,,PD1,AZ1,DEVICE_MAPPING1,SP1,,High,No,High,,,,,,,No,,,,,,,,,Yes,,,,,IP1
-,pflex-user (sudo),,linux,,Primary,IP2,IP2,Primary,High,,,Yes,,IP2,,,PD1,AZ2,DEVICE_MAPPING2,SP1,,High,No,High,,,,,,,No,,,,,,,,,Yes,,,,,IP2
-,pflex-user (sudo),,linux,,Secondary,IP3,IP3,Secondary,High,,,Yes,,IP3,,,PD1,AZ3,DEVICE_MAPPING3,SP1,,High,No,High,,,,,,,No,,,,,,,,,Yes,,,,,IP3
+,pflex-user (sudo),,linux,,TB,IP1,IP1,TB,High,,,Yes,,IP1,,,PD1,AZ1,DEVICE_MAPPING1,SP1,,High,No,,,,,,,,No,,,,,,,,,Yes,,,,,IP1
+,pflex-user (sudo),,linux,,Primary,IP2,IP2,Primary,High,,,Yes,,IP2,,,PD1,AZ2,DEVICE_MAPPING2,SP1,,High,No,,,,,,,,No,,,,,,,,,Yes,,,,,IP2
+,pflex-user (sudo),,linux,,Secondary,IP3,IP3,Secondary,High,,,Yes,,IP3,,,PD1,AZ3,DEVICE_MAPPING3,SP1,,High,No,,,,,,,,No,,,,,,,,,Yes,,,,,IP3
 Storage Pool Configuration,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ProtectionDomain,StoragePool,Media Type,External Acceleration,Data Layout,Fine Granularity ACCP,Zero Padding,Compression Method,Replication journal capacity percentage,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 PD1,SP1,SSD,None,MG,,Yes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
