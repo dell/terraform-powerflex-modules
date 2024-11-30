@@ -135,7 +135,7 @@ resource "null_resource" "copy-getnvme-remote-data" {
     working_dir = "${path.module}"
     interpreter = var.interpreter
     command = <<EOT
-      scp -i -i ${var.private_key} var.user@${var.co_res_ips[count.index]}:/tmp/nvme_disks_${var.co_res_ips[count.index]}.txt ./run-installer-scripts-${var.timestamp}/.
+      scp -o StrictHostKeyChecking=no -i ${var.private_key} ${var.generated_username}@${var.co_res_ips[count.index]}:/tmp/nvme_disks_${var.co_res_ips[count.index]}.txt ./run-installer-scripts-${var.timestamp}/.
     EOT
   }
   triggers = {
