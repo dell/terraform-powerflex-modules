@@ -101,16 +101,4 @@ resource "null_resource" "installer_executer_remote" {
     }
   }
 
-  #provisioner "remote-exec" {
-  #  when       = "destroy"
-  #  inline     = [
-  #    " cd /tmp; rm ./run_installer.sh; rm ./Rest_Config.json;"
-  #  ]
-  #  connection {
-  #    type        = "ssh"
-  #    user        = var.bastion_config.bastion_user
-  #    private_key = file(var.bastion_config.bastion_ssh_key)
-  #    host        = var.bastion_config.bastion_host
-  #  }
-  #}
 }

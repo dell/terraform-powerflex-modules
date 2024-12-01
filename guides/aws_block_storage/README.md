@@ -192,7 +192,7 @@ Replace `<load_balancer_ip>` with the actual IP address of your load balancer di
 
 3. **Instance and Volume Recreation**
    - **Issue**: EC2 instances and EBS volumes can not be attached.
-   - **Solution**: Ensure that you have access to the acc zone specified for the subnet.
+   - **Solution**: Ensure that you have access to the zone specified for the subnet.
 
 ### Remote Provisioners
 

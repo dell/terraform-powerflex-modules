@@ -110,6 +110,7 @@ resource null_resource "create_directory" {
   }
 }
 
+# Define the null_resource to execute the nvme command
 resource "null_resource" "execute-getnvme-remote-script" {
   count = local.deployment_type_performance && !var.bastion_config.use_bastion ?  length(var.co_res_ips) : 0
   connection {
@@ -144,7 +145,7 @@ resource "null_resource" "copy-getnvme-remote-data" {
   depends_on = [null_resource.execute-getnvme-remote-script]
 }
 
-# Define the null_resource to execute the nvme command
+# Define the null_resource to execute the nvme command for bastion
 resource "null_resource" "execute-getnvme-bastion-script" {
   count = local.deployment_type_performance && var.bastion_config.use_bastion ?  length(var.co_res_ips) : 0
   
@@ -195,11 +196,6 @@ resource "null_resource" "run_new_installer_api" {
     interpreter = var.interpreter
     command = <<-EOT
       export LANG=C.UTF-8
-      #mkdir ./run-installer-scripts-${var.timestamp}
-      #cp -r ./scripts/* ./run-installer-scripts-${var.timestamp}
-      #cp ./csv_templates/${local.csv_name} ./run-installer-scripts-${var.timestamp}/CSV_basic.csv
-      #dos2unix ./run-installer-scripts-${var.timestamp}/*
-      #chmod +x ./run-installer-scripts-${var.timestamp}/*
       cd ./run-installer-scripts-${var.timestamp}
       if [[ ${var.instance_type} == *i3en.metal* ]] || [[ ${var.instance_type} == *i3en.12xlarge* ]];
       then

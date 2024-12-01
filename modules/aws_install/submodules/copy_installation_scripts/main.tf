@@ -82,12 +82,10 @@ resource "null_resource" "copy-installation-scripts" {
      inline = [
       // create the post deployment directory in the installer
       "dos2unix /tmp/reset-core-installation/*",
-      #var.installer_ip != "" ? "ssh -o 'StrictHostKeyChecking no' ${var.installer_ip} 'mkdir -p /tmp/bundle/post_deployment_scripts'" : "mkdir -p /tmp/bundle/post_deployment_scripts",
       "mkdir -p /tmp/bundle/post_deployment_scripts",
       "chmod +x /tmp/reset-core-installation/*",
       "cd /tmp/reset-core-installation && ./build-clean-core-mno.sh ${join(" ",var.co_res_ips)}",
       "cd /tmp/reset-core-installation && ./build-run-remote-script.sh ${join(" ",var.co_res_ips)}",
-      #var.installer_ip != "" ? "scp -o 'StrictHostKeyChecking no' -r /tmp/reset-core-installation ${var.installer_ip}:/tmp/bundle/post_deployment_scripts/reset-core-installation" : "mv /tmp/reset-core-installation /tmp/bundle/post_deployment_scripts/reset-core-installation",
       "cp  -r /tmp/reset-core-installation /tmp/bundle/post_deployment_scripts/reset-core-installation",
       "rm -rf /tmp/reset-core-installation"
     ]
