@@ -56,3 +56,5 @@ The Terraform Modules for Dell PowerFlex is released and licensed under the MPL-
   * [vSphere OVA Deployment](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/vsphere-ova-vm-deployment)
   * [Powerflex Management Installer EXSi](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/vsphere_pfmp_installation)
   * [Azure Block Storage Deployment](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/azure_pfmp)
+  * [AWS Block Storage Infrastructure](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/aws_infra)
+  * [AWS Block Storage Deployment](https://registry.terraform.io/modules/dell/modules/powerflex/latest/submodules/aws_install)
