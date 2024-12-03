@@ -42,7 +42,7 @@ variable "interpreter" {
 }
 
 locals {
-    relative_path = "../.."
+    relative_path = "../"
 }
 
 resource "null_resource" "copy_executer" {

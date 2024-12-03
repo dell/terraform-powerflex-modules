@@ -88,7 +88,7 @@ resource "null_resource" "scp_remote_file_bastion" {
   provisioner "local-exec" {
     interpreter = var.interpreter
     command = <<EOT
-      scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -o StrictHostKeyChecking=no -i ${var.bastion_config.bastion_ssh_key}  ${var.bastion_config.bastion_user}@${var.bastion_config.bastion_host} nc %h %p"   -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt ${path.module}/.
+      scp -o StrictHostKeyChecking=no -o ProxyCommand="ssh -o StrictHostKeyChecking=no -i ${var.bastion_config.bastion_ssh_key}  ${var.bastion_config.bastion_user}@${var.bastion_config.bastion_host} nc %h %p"   -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt ./.
     EOT
   }
 
@@ -104,7 +104,7 @@ resource "null_resource" "scp_remote_file" {
   provisioner "local-exec" {
     interpreter = var.interpreter
     command = <<EOT
-      scp -o StrictHostKeyChecking=no -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt ${path.module}/.
+      scp -o StrictHostKeyChecking=no -i ${var.private_key_path} ${var.user}@${var.host_ip}:/tmp/hostnames_output.txt ./.
     EOT
   }
 
@@ -116,13 +116,13 @@ resource "null_resource" "scp_remote_file" {
 
 resource "null_resource" "remove_on_destroy" {
   provisioner "local-exec" {
-    command = "rm ${path.module}/hostnames_output.txt"
+    command = "rm ./hostnames_output.txt"
     when    = destroy
   }
 }
 
 data "local_file" "hostnames_output" {
-  filename = "${path.module}/hostnames_output.txt"
+  filename = "./hostnames_output.txt"
   depends_on = [null_resource.scp_remote_file, null_resource.scp_remote_file_bastion]
 }
 
