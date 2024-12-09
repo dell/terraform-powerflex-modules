@@ -30,11 +30,16 @@ In this release, we are introducing Terraform modules for the purpose of user ma
 * [Committer Guide](https://github.com/dell/dell-terraform-providers/blob/main/docs/COMMITTER_GUIDE.md)
 * [Contributing Guide](https://github.com/dell/dell-terraform-providers/blob/main/docs/CONTRIBUTING.md)
 * [List of Adopters](https://github.com/dell/dell-terraform-providers/blob/main/docs/ADOPTERS.md)
+* [Documentation](#documentation)
 * [Support](#support)
 * [Security](https://github.com/dell/dell-terraform-providers/blob/main/docs/SECURITY.md)
 * [License](#license)
 * [Prerequisites](#prerequisites)
 * [List of Submodules in Terraform Modules for Dell PowerFlex](#list-of-submodules-in-terraform-modules-for-dell-powerflex)
+
+## Documentation
+- [Powerflex Terraform Modules Documentation](https://dell.github.io/terraform-docs/modules/storage/platforms/powerflex) 
+- [Powerflex Terraform Modules Guides](https://github.com/dell/terraform-powerflex-modules/tree/main/guides)
 
 ## Support
 For any Terraform Modules for Dell PowerFlex issues, questions or feedback, please follow our [support process](https://github.com/dell/dell-terraform-providers/blob/main/docs/SUPPORT.md)

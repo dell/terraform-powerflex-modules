@@ -41,7 +41,7 @@ module "sdc_host" {
 }
 ```
 
-Please refer the SDC Host example [here](../../examples/sdc_host_linux/main.tf)
+Please refer the SDC Host example [here](https://github.com/dell/terraform-powerflex-modules/blob/main/examples/sdc_host_linux/README.md)
 After providing proper values to all the attributes eg. using terraform.tfvars, then in that workspace, run
 
 ```
