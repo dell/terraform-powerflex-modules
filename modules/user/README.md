@@ -60,7 +60,7 @@ User module can only be used with terraform provider powerflex >= v1.2.0
 
 ### Usage
 
-Please refer the User example [here](../../examples/user/main.tf)
+Please refer the User example [here](https://github.com/dell/terraform-powerflex-modules/blob/main/examples/user/README.md)
 After providing proper values to all the attributes, then in that workspace, run
 
 ```

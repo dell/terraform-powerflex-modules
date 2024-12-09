@@ -1,3 +1,10 @@
+---
+title: "Apex Block for AWS module Guide"
+linkTitle: "Apex Block for AWS module Guide"
+description: PowerFlex Terraform AWS module Guide
+weight: 2
+---
+
 <!--
 Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 

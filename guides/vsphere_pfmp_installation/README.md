@@ -1,4 +1,11 @@
-# vSphere OVA Powerflex Manager Installation Guide
+---
+title: "Apex Block for vSphere module Guide"
+linkTitle: "Apex Block for vSphere module Guide"
+description: PowerFlex Terraform vSphere module Guide
+weight: 2
+---
+
+## vSphere OVA Powerflex Manager Installation Guide
 
 ### Overview
 *This configuration will be broken into 3 steps, each step will have either a configuration or README with manual steps the user needs to do.* 
