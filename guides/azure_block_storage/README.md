@@ -1,3 +1,10 @@
+---
+title: "Apex Block for Azure module Guide"
+linkTitle: "Apex Block for Azure module Guide"
+description: PowerFlex Terraform Azure module Guide
+weight: 2
+---
+
 ## APEX Block Storage deployment on Microsoft Azure
 
 This will guide you through how to deploy Dell APEX Block Storage for Microsoft Azure with terraform cli.
