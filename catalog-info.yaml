@@ -1,0 +1,29 @@
+# nonk8s
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dell-terraform-powerflex-modules
+  description: "Terraform Modules for Dell PowerFlex"
+  tags:
+    - devops
+    - automation
+    - terraform
+    - dell
+    - infrastructure-as-code
+    - terraform-modules
+    - powerflex
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: dell/terraform-powerflex-modules
+  links:   
+    - url: 'https://dell.github.io/terraform-docs/modules/storage/platforms/powerflex/'
+      title: 'Dell Terraform Modules Documentation'
+      icon: 'web'
+    - url: 'https://github.com/dell/terraform-powerflex-modules/issues'
+      title: 'Contact Technical Support'
+      icon: 'help'
+spec:
+  type: service
+  lifecycle: production
+  owner: user:default/varun.chinta
+  visibility: all
