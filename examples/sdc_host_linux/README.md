@@ -25,46 +25,104 @@ limitations under the License.
 
 This Terraform module installs the SDC package on a remote Linux host using the `powerflex_sdc_host` resource.
 
-## Example inputs
+***Note**: VM should have the following packages **installed fio sshpass unzip yum-utils wget gcc make***
 
-terraform.tfvars
+## Example Main.tf
+
+main.tf for Ubuntu
 ```hcl
-remote_host={
-    user = "root"
-    private_key = ""
-    certificate = ""
-    password = "password"
+terraform {
+  required_providers {
+    powerflex = {
+      version = ">=1.6.0"
+      source  = "registry.terraform.io/dell/powerflex"
+      }
     }
-
-
-ip="1.2.11.4"
-versions={
-    pflex = "4.5.3000.118"
-    kernel = "5.15.0-1-generic"
-}
-scini = {
-    url = "http://example.com/release/5.15.0-1-generic"
-    linux_distro = "RHEL9" #"Ubuntu"
-    autobuild_scini = true
 }
 
-sdc_pkg = {
-    url = "http://example.com/release/SIGNED/EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar"
-    local_dir = "/tmp"
-    pkg_name = "EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar"
-    remote_pkg_name = "emc-sdc-package.tar"
-    remote_dir = "/tmp"
-    remote_file = "EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar"
-    use_remote_path = true
-    skip_download_sdc = false
+module "sdc_host" {
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_linux"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  remote_host = { // Stores the SSH credentials for connecting to the remote Linux host.
+      user = "root"
+      password = "password"
+  }
+
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
+
+  ip="1.2.11.4" //Stores the IP address of the remote Linux host.
+  versions={
+      pflex = "4.5.3000.118"
+      kernel = "5.15.0-1-generic"
+  }
+  scini = {
+      url = "" // leave as empty for autobuild = true
+      linux_distro = "Ubuntu"
+      autobuild_scini = true // allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver 
+  }
+
+  sdc_pkg = {
+      url = "http://example.com/release/SIGNED/EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar"
+      local_dir = "/tmp"
+      remote_pkg_name = "emc-sdc-package.tar" // Dont update this, It should be emc-sdc-package.tar
+      remote_dir = "/tmp" // temp directory on the SDC host
+      remote_file = "EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar" // name of file once downloaded on to remote should match what is being downloaded from sdc_pkg
+      use_remote_path = true // Leave this as true
+      skip_download_sdc = false // Leave this as false
+  }
+  mdm_ips = [] // If only attaching to one cluster then leave as empty list [] and the default virtual ips will be picked up. If wanting to attach to more then one cluster, give the mdm ips in a fomat like so provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8']
+}
+```
+
+main.tf for RHEL9
+```hcl
+terraform {
+  required_providers {
+    powerflex = {
+      version = ">=1.6.0"
+      source  = "registry.terraform.io/dell/powerflex"
+      }
+    }
 }
 
-powerflex_config = {
-    username = "admin"
-    endpoint = "https://1.2.6.4:443"
-    password = "Password"
-}
+module "sdc_host" {
 
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_linux"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  remote_host = { // Stores the SSH credentials for connecting to the remote Linux host.
+      user = "root"
+      password = "password"
+  }
+
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
+
+  ip="1.2.11.4" //Stores the IP address of the remote Linux host.
+  versions={
+      pflex = "4.5.3000.118"
+      kernel = "5.15.0-1-generic"
+  }
+  scini = {
+      url = "" // leave as empty for autobuild = true
+      linux_distro = "RHEL9"
+      autobuild_scini = true // allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver 
+  }
+
+  sdc_pkg = {
+      url = "http://example.com/release/SIGNED/EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.rpm"
+      local_dir = "/tmp"
+      remote_pkg_name = "emc-sdc-package.rpm" // Dont update this, It should be emc-sdc-package.rpm
+      remote_dir = "/tmp" // temp directory on the SDC host
+      remote_file = "EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.rpm" // name of file once downloaded on to remote should match what is being downloaded from sdc_pkg
+      use_remote_path = true // Leave this as true
+      skip_download_sdc = false // Leave this as false
+  }
+  mdm_ips = [] // If only attaching to one cluster then leave as empty list [] and the default virtual ips will be picked up. If wanting to attach to more then one cluster, give the mdm ips in a fomat like so provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8']
+}
 ```
 
 ## Usage
@@ -109,7 +167,6 @@ No resources.
 |------|-------------|------|---------|:--------:|
 | <a name="input_ip"></a> [ip](#input\_ip) | Stores the IP address of the remote Linux host. | `string` | n/a | yes |
 | <a name="input_mdm_ips"></a> [mdm\_ips](#input\_mdm\_ips) | all the mdms (either primary,secondary or virtual ips) in a comma separated list by cluster if unset will use the mdms of the cluster set in the provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8'] | `list(string)` | `[]` | no |
-| <a name="input_powerflex_config"></a> [powerflex\_config](#input\_powerflex\_config) | Stores the configuration for terraform PowerFlex provider. | <pre>object({<br>    # Define the attributes of the configuration for terraform PowerFlex provider.<br>    username = string<br>    endpoint = string<br>    password = string<br>  })</pre> | n/a | yes |
 | <a name="input_remote_host"></a> [remote\_host](#input\_remote\_host) | Stores the SSH credentials for connecting to the remote Linux host. | <pre>object({<br>    # Define the `user` attribute of the `remote` variable.<br>    user = string<br>    # Define the ssh `private_key` file with path for the SDC login user<br>    private_key = optional(string, "")<br>    # Define the ssh `certificate` file path, issued to the SDC login user<br>    certificate = optional(string, "")<br>    password = optional(string)<br>  })</pre> | n/a | yes |
 | <a name="input_scini"></a> [scini](#input\_scini) | The SCINI module package related variables. | <pre>object({<br>    # The URL where the SCINI module package is located. Ignored if autobuild_scini is true.<br>    url = optional(string)<br>    # specify distro where SDC will be deployed eg. RHEL9, Ubuntu etc. as case sensitive<br>    linux_distro = string<br>    #allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver <br>    autobuild_scini = optional(bool, false)<br>  })</pre> | n/a | yes |
 | <a name="input_sdc_pkg"></a> [sdc\_pkg](#input\_sdc\_pkg) | configuration for SDC package like url to download package from, copy as local package or directory on remote server. One of local\_dir or remote\_dir will be used based on the variable use\_remote\_path | <pre>object({<br>    # examples "http://example.com/EMC-ScaleIO-sdc-3.6-700.103.Ubuntu.22.04.x86_64.tar", "ftp://username:password@ftpserver/path/to/file"<br>    url = optional(string)<br>    #the name of the SDC package for local.<br>    pkg_name = optional(string)<br>    #the name of the SDC package for remote machine. It should be emc-sdc-package.(tar/rpm)<br>    remote_pkg_name = optional(string)<br>    #local directory where the SDC package will be downloaded.<br>    local_dir = optional(string)<br>    #remote directory where the SDC package will be downloaded. (if use_remote_path is true)<br>    remote_dir = optional(string, "/tmp")<br>    # use the SDC package on remote machine path (where SDC is deployed)<br>    use_remote_path = bool<br>    # if SDC package is available in local directory, download can be skipped by setting to true<br>    skip_download_sdc = optional(bool, false)<br>  })</pre> | n/a | yes |

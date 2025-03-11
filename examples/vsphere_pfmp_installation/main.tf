@@ -20,8 +20,12 @@
 ##########################################
 
 module "vsphere_pfmp_installation" {
-  # Here source points to the vsphere_pfmp_installation submodule in the modules folder. You can change the value to point it according to your usecase. 
-  source = "../../modules/vsphere_pfmp_installation"
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source = "../../modules/vsphere_pfmp_installation"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/vsphere_pfmp_installation"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
 
   # Required
   # Ip address of the ntp server

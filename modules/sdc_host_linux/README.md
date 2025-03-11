@@ -25,19 +25,101 @@ SDC Host module can only be used with terraform provider PowerFlex v1.6.0 and ab
 
 For SELinux configration, refer to "Configure the SDC (scini) driver for SELinux" section in PowerFlex Install/Upgrade guide.
 
-
+***Note**: VM should have the following packages **installed fio sshpass unzip yum-utils wget gcc make***
 
 ## Usage
 
+main.tf for Ubuntu
 ```hcl
-module "sdc_host" {
-  source = "./modules/sdc_host_linux"
+terraform {
+  required_providers {
+    powerflex = {
+      version = ">=1.6.0"
+      source  = "registry.terraform.io/dell/powerflex"
+      }
+    }
+}
 
-  versions = var.versions
-  ip = var.ip
-  remote_host = var.remote_host
-  scini = var.scini
-  sdc_pkg = var.sdc_pkg
+module "sdc_host" {
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_linux"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  remote_host = { // Stores the SSH credentials for connecting to the remote Linux host.
+      user = "root"
+      password = "password"
+  }
+
+
+  ip="1.2.11.4" //Stores the IP address of the remote Linux host.
+  versions={
+      pflex = "4.5.3000.118"
+      kernel = "5.15.0-1-generic"
+  }
+  scini = {
+      url = "" // leave as empty for autobuild = true
+      linux_distro = "Ubuntu"
+      autobuild_scini = true // allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver 
+  }
+
+  sdc_pkg = {
+      url = "http://example.com/release/SIGNED/EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar"
+      local_dir = "/tmp"
+      remote_pkg_name = "emc-sdc-package.tar" // Dont update this, It should be emc-sdc-package.tar
+      remote_dir = "/tmp" // temp directory on the SDC host
+      remote_file = "EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.tar" // name of file once downloaded on to remote should match what is being downloaded from sdc_pkg
+      use_remote_path = true // Leave this as true
+      skip_download_sdc = false // Leave this as false
+  }
+  mdm_ips = [] // If only attaching to one cluster then leave as empty list [] and the default virtual ips will be picked up. If wanting to attach to more then one cluster, give the mdm ips in a fomat like so provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8']
+}
+```
+
+main.tf for RHEL9
+```hcl
+terraform {
+  required_providers {
+    powerflex = {
+      version = ">=1.6.0"
+      source  = "registry.terraform.io/dell/powerflex"
+      }
+    }
+}
+
+module "sdc_host" {
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_linux"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  remote_host = { // Stores the SSH credentials for connecting to the remote Linux host.
+      user = "root"
+      password = "password"
+  }
+
+
+  ip="1.2.11.4" //Stores the IP address of the remote Linux host.
+  versions={
+      pflex = "4.5.3000.118"
+      kernel = "5.15.0-1-generic"
+  }
+  scini = {
+      url = "" // leave as empty for autobuild = true
+      linux_distro = "RHEL9"
+      autobuild_scini = true // allow to build scini on destination machine. This may not work on PowerFlex v3.X. Prerequisites here https://www.dell.com/support/kbdoc/en-us/000224134/how-to-on-demand-compilation-of-the-powerflex-sdc-driver 
+  }
+
+  sdc_pkg = {
+      url = "http://example.com/release/SIGNED/EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.rpm"
+      local_dir = "/tmp"
+      remote_pkg_name = "emc-sdc-package.rpm" // Dont update this, It should be emc-sdc-package.rpm
+      remote_dir = "/tmp" // temp directory on the SDC host
+      remote_file = "EMC-ScaleIO-sdc-4.5-3000.118.Ubuntu.22.04.x86_64.rpm" // name of file once downloaded on to remote should match what is being downloaded from sdc_pkg
+      use_remote_path = true // Leave this as true
+      skip_download_sdc = false // Leave this as false
+  }
+  mdm_ips = [] // If only attaching to one cluster then leave as empty list [] and the default virtual ips will be picked up. If wanting to attach to more then one cluster, give the mdm ips in a fomat like so provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8']
 }
 ```
 

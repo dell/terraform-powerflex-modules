@@ -114,7 +114,7 @@ resource powerflex_sdc_host sdc_local_path {
     guid         = random_uuid.sdc_guid.result
   }
    use_remote_path = local.use_remote_path
-   name = "sdc-${var.ip}"
+   name = var.sdc_name
    package_path = "${terraform_data.sdc_pkg_local[0].output.local_dir}/${terraform_data.sdc_pkg_local[0].output.pkg_name}"
    clusters_mdm_ips = var.mdm_ips
  }
@@ -134,7 +134,7 @@ resource powerflex_sdc_host sdc_local_path {
     guid         = random_uuid.sdc_guid.result
   }
    use_remote_path = local.use_remote_path
-   name = "sdc-${var.ip}"
+   name = var.sdc_name
    package_path = terraform_data.sdc_pkg_remote[0].output.sdc_pkg.pkg_name
    clusters_mdm_ips = var.mdm_ips
  }

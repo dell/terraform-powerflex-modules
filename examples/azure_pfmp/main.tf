@@ -16,7 +16,12 @@
 # */
 
 module "azure_pfmp" {
-  source         = "../../modules/azure_pfmp"
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source         = "../../modules/azure_pfmp"
+
+  source  = "dell/modules/powerflex//modules/azure_pfmp"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
   bastion_subnet = var.bastion_subnet
   cluster = {
     node_count        = var.cluster_node_count

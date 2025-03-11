@@ -15,6 +15,37 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+## Example main.tf
+main.tf
+```hcl
+module "sdc_host_esxi" {
+  
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_esxi"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  # Host information of the host which the SDC should be installed upone
+  remote_host={
+    user = "root" // SSH User
+    password = "password" // SSH Password
+  }
+
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
+
+  ip="1.2.11.10" // IP of the EsXi Host which the SDC will be installed upon
+  
+  # SDC Package information
+  sdc_pkg = {
+    url = "https://example.com/sdc-4.5.0.263-esx8.x.zip" // SDC Package URL Download Location. For FTP Example like "ftp://username:password@ftpserver/path/to/file"
+    #local_dir = "/tmp" // If you want to download the package locally, put the path to download
+    pkg_name = "sdc-4.5.0.263-esx8.x.zip" // SDC downloaded package name
+    remote_pkg_name = "emc-sdc-package.zip" // Do not update this value
+    remote_dir = "/tmp" // Where the package will be downloaded on the ESXi Host
+    use_remote_path = true // Always set this to true
+  }
+}
+```
+
 # SDC Host Module for ESXi
 
 This Terraform module installs the SDC package on a remote ESXi host using the `powerflex_sdc_host` resource.

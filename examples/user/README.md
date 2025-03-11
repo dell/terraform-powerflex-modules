@@ -20,6 +20,43 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+## Example
+
+main.tf
+```hcl
+
+terraform {
+  required_providers {
+    powerflex = {
+      version = "1.2.0"
+      source  = "registry.terraform.io/dell/powerflex"
+    }
+    null = {  
+      source = "hashicorp/null"  
+      version = "3.2.1"  
+    }
+  }
+    
+}
+
+module "user_creation" {
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally. 
+  # source = "../../modules/user"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/user"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  newUserName = "user"
+  userRole = "Monitor"
+  userPassword = "Password1234"
+  mdmUserName = "root"
+  mdmPassword = "Password"
+  mdmHost = "10.x.x.x"
+  newPassword = "Password123"
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

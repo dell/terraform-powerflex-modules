@@ -26,10 +26,3 @@ terraform {
   }
 }
 
-provider "powerflex" {
-  username = var.username
-  password = var.password
-  endpoint = var.endpoint
-  insecure = var.insecure
-  timeout  = 120
-}

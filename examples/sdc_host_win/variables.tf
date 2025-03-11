@@ -33,16 +33,6 @@ variable "remote_host" {
 
 }
 
-variable "powerflex_config" {
-  description = "Stores the configuration for terraform PowerFlex provider."
-  type        = object({
-    # Define the attributes of the configuration for terraform PowerFlex provider.
-    username = string
-    endpoint = string
-    password = string
-  })
-}
-
 variable "mdm_ips" {
   description = "all the mdms (either primary,secondary or virtual ips) in a comma separated list by cluster if unset will use the mdms of the cluster set in the provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8']"
   type        = list(string)

@@ -19,7 +19,12 @@
 # main.tf
 
 module "aws_infra" {
-  source = "../../modules/aws_infra"
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source = "../../modules/aws_infra"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/aws_infra"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
 
   vpc_name     = var.vpc_name
   subnet_ids = var.subnet_ids
@@ -39,7 +44,9 @@ module "aws_infra" {
 }
 
 module "load-balancer" {
-  source                 = "../../modules/aws_prereq/load_balancer"
+  source  = "dell/modules/powerflex//modules/aws_prereq/load_balancer"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
   application_version    = var.application_version
   creator                = var.creator
   management_ids         = module.aws_infra.management_ids
@@ -50,7 +57,8 @@ module "load-balancer" {
 }
 
 module "aws_install" {
-  source = "../../modules/aws_install"
+  source = "dell/modules/powerflex//modules/aws_install"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
 
   installer_node_ip = module.aws_infra.installer_ip
   co_res_ips = module.aws_infra.co_res_ips

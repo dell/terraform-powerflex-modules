@@ -21,12 +21,17 @@
 ##############
 
 module "sdc_host_win" {
-  # Here source points to the sdc_host_win submodule in the modules folder. You can change the value to point it according to your usecase. 
-  source = "../../modules/sdc_host_win"
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source = "../../modules/sdc_host_win"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_win"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
 
   ip = var.ip
   remote_host = var.remote_host
   sdc_pkg = var.sdc_pkg
   mdm_ips = var.mdm_ips
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
 }
 

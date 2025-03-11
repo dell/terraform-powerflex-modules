@@ -22,13 +22,35 @@ It downloads the package either on local machine or remote (Windows) machine and
 
 ## Usage
 
+main.tf
+
 ```hcl
+
+terraform {
+  required_providers {
+    powerflex = {
+      version = ">=1.6.0"
+      source  = "registry.terraform.io/dell/powerflex"
+      }
+    }
+}
+
 module "sdc_host_win" {
-  # Here source points to the sdc_host_win submodule in the modules folder. You can change the value to point it according to your usecase. 
-  source = "../../modules/sdc_host_win"
-  ip = var.ip
-  remote_host = var.remote_host
-  sdc_pkg = var.sdc_pkg
+  source = "dell/modules/powerflex//modules/sdc_host_win"
+  version = "x.x.x" //Grab the latest but for example 1.2.0
+  
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
+  ip = "x.x.x.x" // Update to the IP of the VM which you want to install your SDC packages upon 
+  remote_host = {
+    user = "example-user" // Update to the username used to access the windows VM
+    password = "example-password" // Update to the password used ot access the windows VM 
+  }
+  sdc_pkg = {
+    url = "http://example.com/EMC-ScaleIO-sdc-4.6-x.x.msi" // URL to place where the sdc.msi file is hosted FTP Example: "ftp://username:password@ftpserver/path/to/EMC-ScaleIO-sdc-4.6-x.x.msi" # the name of the SDC package saved in local directory.
+    pkg_name = "EMC-ScaleIO-sdc-4.6-x.x.msi" 
+    local_dir = "/tmp" // Where the sdc_pkg will be downloaded
+    use_remote_path = false // download and use the SDC package on remote machine path (where SDC is going to be deployed)
+  }
 }
 ```
 
