@@ -14,6 +14,154 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+main.tf
+
+```hcl
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.90.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "" // Input your region i.e "us-east-1"
+  // For more information on the different aws provider configurations check out here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+  profile = "" // Input your aws provider i.e "default"
+}
+
+module "aws_infra" {
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source = "../../modules/aws_infra"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/aws_infra"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  vpc_name     = var.vpc_name
+  subnet_ids = var.subnet_ids
+  vpn_security_group = var.security_group
+  multi_az = var.multi_az
+  instance_type = var.instance_type
+  instance_count = var.instance_count
+  deployment_type = var.deployment_type
+  key_path = var.key_path
+  private_key_path = var.private_key_path
+  creator                = var.creator
+  application_version    = var.application_version
+  bastion_config = var.bastion_config
+  private_subnet_cidr = var.private_subnet_cidr
+  disk_size = var.disk_size
+  disk_count = var.disk_count
+}
+
+module "load-balancer" {
+  source  = "dell/modules/powerflex//modules/aws_prereq/load_balancer"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  application_version    = var.application_version
+  creator                = var.creator
+  management_ids         = module.aws_infra.management_ids
+  subnet_ids             = var.subnet_ids
+  vpc_id                 = var.vpc_name
+  security_group         = var.security_group
+  depends_on             = [module.aws_infra]
+}
+
+module "aws_install" {
+  source = "dell/modules/powerflex//modules/aws_install"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
+  installer_node_ip = module.aws_infra.installer_ip
+  co_res_ips = module.aws_infra.co_res_ips
+  device_mapping = module.aws_infra.device_mapping
+  loadbalancer_dns = module.load-balancer.loadbalancer_dns
+  loadbalancer_ip = module.load-balancer.loadbalancer_private_ip
+  node_ips = module.aws_infra.management_ips
+  management_ips = module.aws_infra.management_ips
+  instance_type = var.instance_type
+  key_path = var.key_path
+  private_key_path = var.private_key_path
+  multi_az = var.multi_az
+  bastion_config = var.bastion_config
+  interpreter = var.interpreter
+  depends_on             = [module.load-balancer]
+}
+
+output "loadbalancer_dns" {
+  description = "The DNS of the loadbalancer."
+  value       = module.load-balancer.loadbalancer_dns
+}
+
+
+output "loadbalancer_private_ip" {
+  description = "The IP of the loadbalancer. Apex block management webui can be accessed from this IP."
+  value       = module.load-balancer.loadbalancer_private_ip
+}
+
+output "installer_ip" {
+  description = "The private ip of the installer server"
+  value       = module.aws_infra.installer_ip
+}
+```
+
+terraform.tfvars
+```hcl
+#Sample tfvars file
+
+#Name of the creator. This will be used in the name of resources and/or tags
+creator = "MyName-MyCompany-TF"
+#Type of deployment setup - performance or balanced
+deployment_type = "performance"
+#Size of the disk in GB, size of disk can be: 500GB, 1TB, 2TB, 4TB
+disk_size = 512
+#number of disks per instance. Set 10 for balanced and 0 for performance
+disk_count = 10
+#Number of instances. Number of instances to create. Currently supported count is 3 for performance and 5 for balanced deployment type. If multi_az is true, balanced should have 6 instances.
+instance_count = 3
+
+#Type of the EC2 instance. Currently only i3en.12xlarge is supported for performance in multi zone. i3n.metal is supported for single zone performance. c5n.9xlarge is supported for balanced.
+instance_type = "i3en.12xlarge"
+#application version
+application_version="4.6"
+
+#Name of the vpc (see the guide for more details)
+vpc_name= "vpc-12345678901234567"
+#subnet ids (see the guide for more details)
+subnet_ids = ["subnet-12345678901234567"]
+#Path to SSH public key
+key_path = "/root/.ssh/id_rsa.pub"
+#Path to SSH private key
+private_key_path = "/root/.ssh/id_rsa"
+
+#Bastion (jump host) configuration (see the guide for more details)
+bastion_config = {
+    use_bastion    = true
+    bastion_host   = "1.2.3.7"
+    bastion_user   = "root"
+    bastion_ssh_key = "/root/.ssh/jump-server.pem"
+}
+# security group (see the guide for more details)
+security_group = "sg-12345678901234567"
+
+#the private cidr range (see the guide for more details)
+private_subnet_cidr = ["172.1.0.0/24"]
+
+#the interpreter used for shell script (see the variables.tf for other example)
+interpreter = ["/bin/bash", "-c"]
+
+# Map of AMI ids for installer and co-res (optional). If not provided, it will try to find based on the application_version provided.
+ami = {
+    "installer" = "ami-123"
+    "co-res" = "ami-456"
+  }
+  
+#Enable multi availability zone deployment (boolean)
+multi_az = false
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

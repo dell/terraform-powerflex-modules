@@ -20,10 +20,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-## Example inputs
 
-terraform.tfvars
+## Example
+
+main.tf
 ```hcl
+module "vsphere_ova_vm_deployment" {
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source = "../../modules/vsphere-ova-vm-deployment"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/vsphere_pfmp_installation"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
   # Required
   vm_ova_path = "https://example.com/path/to/example.ova"
   vsphere_datacenter_name = "datacenter"
@@ -37,6 +46,10 @@ terraform.tfvars
   # vm_name = "example-name"
   # use_remote_path = false
   # allow_unverified_ssl = false
+  # num_cpus = 8
+  # memory = 8120
+  # adapter_type = "vmxnet3"
+}
 ```
 
 <!-- BEGIN_TF_DOCS -->

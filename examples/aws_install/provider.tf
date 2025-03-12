@@ -15,7 +15,11 @@
 # limitations under the License.
 # */
 
-provider "aws" {
-  region = "us-east-1"  # Change to your desired region
-  profile = "default"
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.90.0"
+    }
+  }
 }

@@ -24,6 +24,12 @@ variable "ip" {
   description = "Stores the IP address of the remote Linux host."
 }
 
+variable "sdc_name" {
+  type        = string
+  description = "Stores the name which we want to designate to the SDC. Defaults to terraform-sdc."
+  default     = "terraform-sdc"
+}
+
 variable "remote_host" {
   description = "Stores the SSH credentials for connecting to the remote Linux host."
   type        = object({
@@ -40,8 +46,8 @@ variable "remote_host" {
 variable "mdm_ips" {
   description = "all the mdms (either primary,secondary or virtual ips) in a comma separated list by cluster if unset will use the mdms of the cluster set in the provider block eg. ['10.10.10.5,10.10.10.6', '10.10.10.7,10.10.10.8']"
   type        = list(string)
+  default = []
 }
-
 
 variable "scini" {
  

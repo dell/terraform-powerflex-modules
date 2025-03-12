@@ -21,8 +21,12 @@
 ##############
 
 module "sdc_host_linux" {
-  # Here source points to the sdc_host_linux submodule in the modules folder. You can change the value to point it according to your usecase. 
-  source = "../../modules/sdc_host_linux"
+  # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
+  # source = "../../modules/sdc_host_linux"
+
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_linux"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
 
   versions = var.versions
   ip = var.ip
@@ -30,5 +34,6 @@ module "sdc_host_linux" {
   scini = var.scini
   sdc_pkg = var.sdc_pkg
   mdm_ips = var.mdm_ips
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
 }
 

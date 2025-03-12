@@ -21,11 +21,16 @@
 
 module "sdc_host_esxi" {
   # Here source points to the sdc_host_esxi submodule in the modules folder. You can change the value to point it according to your usecase. 
-  source = "../../modules/sdc_host_esxi"
+  # source = "../../modules/sdc_host_esxi"
   
+  # Here is an example of a source that pulls from the registry
+  source  = "dell/modules/powerflex//modules/sdc_host_esxi"
+  version = "x.x.x" // pull in the latest version like "1.2.0"
+
   ip = var.ip
   remote_host = var.remote_host
   sdc_pkg = var.sdc_pkg
   mdm_ips = var.mdm_ips
+  sdc_name = "terraform-sdc"// The name of the SDC will default to 'terraform-sdc'
 }
 
