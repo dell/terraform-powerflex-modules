@@ -99,7 +99,7 @@ For this part, please run the following steps locally.
     terraform apply main.tfplan
     ```
 
-    PS: Once the pfmp installation finishes, it will generate the `terraform.tfvars` file in the `/root` folder on **intaller** for part 2.
+    PS: Once the pfmp installation finishes, it will generate the `terraform.tfvars` file in the `/root` folder on **installer** for part 2.
     
     Copy the `examples/azure_pfmp/ssh/azure.pem` file to your SSH connection location. Jump host as an example.
     
