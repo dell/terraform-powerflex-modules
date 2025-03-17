@@ -175,17 +175,17 @@ For this part, the following steps need to be executed inside of **installer**. 
        - PowerFlex_4.5.2100.105_SLES15.4.zip (current build default)
        - terraform-powerflex-modules-azure-block-storage.zip (this repo)
     2. Open the tunnel the with *az network bastion tunnel* output from the Terraform step 1 execution.
-    3. Open a new connection and SSH into the installer: 
+    3. Open a new connection and SSH into the installer using the pem file -i <PemFileLocation>: 
         ```
-        ssh -p 1111 pflexuser@127.0.0.1
+        ssh -p 1111 -i .ssh/azure.pem pflexuser@127.0.0.1
         ```
     4. You can now scp files directly into the installer with this tunnel. Open a new connection and scp the files to the installer. Transfer the two files and unzip within the installer when the transfers are complete. The scp connection will ask for the password.
         ```
         Example:   
-        scp -P <LocalMachinePort>  <local machine file path>  <username>@127.0.0.1:<target VM file path>
+        scp -P <LocalMachinePort> -i <PemFileLocation> <local machine file path>  <username>@127.0.0.1:<target VM file path>
     
-        scp -P 1111  "C:\temp\PowerFlex_4.5.2100.105_SLES15.4.zip" pflexuser@127.0.0.1:/home/pflexuser
-        scp -P 1111  "C:\temp\terraform-powerflex-modules-azure-block-storage.zip" pflexuser@127.0.0.1:/home/pflexuser
+        scp -P 1111 -i .ssh/azure.pem  "C:\temp\PowerFlex_4.5.2100.105_SLES15.4.zip" pflexuser@127.0.0.1:/home/pflexuser
+        scp -P 1111  -i .ssh/azure.pem "C:\temp\terraform-powerflex-modules-azure-block-storage.zip" pflexuser@127.0.0.1:/home/pflexuser
         ```
     5. When the transfers are complete, copy the zip files to root. Use the previously opened ssh connection from step 3. The PWD should be `/home/pflexuser`
         ```
