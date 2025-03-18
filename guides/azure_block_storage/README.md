@@ -179,7 +179,7 @@ For this part, the following steps need to be executed inside of **installer**. 
         ```
         ssh -p 1111 pflexuser@127.0.0.1
         ```
-    4. You can now scp files directly into the installer with this tunnel. Open a new connection and scp the files to the installer. Transfer the two files and unzip within the installer when the transfers are complete. The scp connection will ask for the password.
+    4. You can now scp files directly into the installer with this tunnel. Open a new connection and scp the files to the installer. Transfer the two files and unzip within the installer when the transfers are complete.
         ```
         Example:   
         scp -P <LocalMachinePort>  <local machine file path>  <username>@127.0.0.1:<target VM file path>
