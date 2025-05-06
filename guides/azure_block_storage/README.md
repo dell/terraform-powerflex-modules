@@ -174,8 +174,8 @@ For this part, the following steps need to be executed inside of **installer**. 
     1. For the initial install, two files will need to be copied to the installer
        - PowerFlex_4.5.2100.105_SLES15.4.zip (current build default)
        - terraform-powerflex-modules-azure-block-storage.zip (this repo)
-    2. Open the tunnel the with *az network bastion tunnel* output from the Terraform step 1 execution.
-    3. Open a new connection and SSH into the installer from the directoy or path where the `azure.pem` file is located. The bastion tunnel will be listening on port 1111. The bastion tunnel will be listening on port 1111.: 
+    2. Open the tunnel with *az network bastion tunnel* output from the Terraform step 1 execution.
+    3. Open a new connection and SSH into the installer from the directory or path where the `azure.pem` file is located. The bastion tunnel will be listening on port 1111.: 
         ```
        ssh -i azure.pem -p 1111 pflexuser@127.0.0.1
         ```
