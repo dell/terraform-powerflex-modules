@@ -54,23 +54,6 @@ data "azurerm_resource_group" "pflex_rg" {
   name  = var.existing_resource_group
 }
 
-## Create virtual network
-resource "azurerm_virtual_network" "pflex_network" {
-  name                = "${var.prefix}-vnet"
-  address_space       = [var.vnet_address_space]
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
-}
-
-## Create subnet
-resource "azurerm_subnet" "pflex_subnets" {
-  count                = length(var.subnets)
-  name                 = var.subnets[count.index].name
-  resource_group_name  = local.resource_group.name
-  virtual_network_name = azurerm_virtual_network.pflex_network.name
-  address_prefixes     = [var.subnets[count.index].prefix]
-}
-
 ## Create Network Security Group and rule
 resource "azurerm_network_security_group" "pflex_nsg" {
   name                = "${var.prefix}-nsg"
@@ -93,22 +76,131 @@ resource "azurerm_network_security_group" "pflex_nsg" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "pflex_nsg_association" {
-  count                     = length(var.subnets)
-  network_security_group_id = azurerm_network_security_group.pflex_nsg.id
-  subnet_id                 = azurerm_subnet.pflex_subnets[count.index].id
+## NSG for bastion
+## Get from https://github.com/Azure/terraform/blob/master/quickstart/201-machine-learning-moderately-secure/bastion.tf
+resource "azurerm_network_security_group" "bastion_nsg" {
+  count               = var.enable_bastion ? 1 : 0
+  name                = "${var.prefix}-nsg-bastion"
+  location            = local.resource_group.location
+  resource_group_name = local.resource_group.name
+
+  security_rule {
+    name                       = "AllowHTTPSInbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "AllowGatewayManagerInbound"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "GatewayManager"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "AllowAzureLBInbound"
+    priority                   = 300
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "AzureLoadBalancer"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "AllowBastionHostCommunication"
+    priority                   = 400
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_ranges    = ["5701", "8080"]
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
+  }
+  security_rule {
+    name                       = "AllowRdpSshOutbound"
+    priority                   = 100
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["22", "3389"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "VirtualNetwork"
+  }
+  security_rule {
+    name                       = "AllowBastionHostCommunicationOutbound"
+    priority                   = 110
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["5701", "8080"]
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
+  }
+  security_rule {
+    name                       = "AllowAzureCloudOutbound"
+    priority                   = 120
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["443"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "AzureCloud"
+  }
+  security_rule {
+    name                       = "AllowGetSessionInformation"
+    priority                   = 130
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["80"]
+    source_address_prefix      = "*"
+    destination_address_prefix = "Internet"
+  }
 }
 
+## Create virtual network
+resource "azurerm_virtual_network" "pflex_network" {
+  name                = "${var.prefix}-vnet"
+  address_space       = [var.vnet_address_space]
+  location            = local.resource_group.location
+  resource_group_name = local.resource_group.name
+
+  dynamic "subnet" {
+    for_each = var.subnets
+    content {
+      name           = subnet.value.name
+      address_prefix = subnet.value.prefix
+      security_group = azurerm_network_security_group.pflex_nsg.id
+    }
+  }
+
+  dynamic "subnet" {
+    for_each = var.enable_bastion ? [var.bastion_subnet] : []
+    content {
+      name           = subnet.value.name
+      address_prefix = subnet.value.prefix
+      security_group = azurerm_network_security_group.bastion_nsg[0].id
+    }
+  }
+}
 
 ## Create bastion
-resource "azurerm_subnet" "pflex_bastion_subnet" {
-  count                = var.enable_bastion ? 1 : 0
-  name                 = var.bastion_subnet.name
-  resource_group_name  = local.resource_group.name
-  virtual_network_name = azurerm_virtual_network.pflex_network.name
-  address_prefixes     = [var.bastion_subnet.prefix]
-}
-
 resource "azurerm_public_ip" "bastion_public_ip" {
   count               = var.enable_bastion ? 1 : 0
   name                = "${var.prefix}-bastion-public-ip"
@@ -128,7 +220,7 @@ resource "azurerm_bastion_host" "bastion_host" {
 
   ip_configuration {
     name                 = "${var.prefix}-bastion-configuration"
-    subnet_id            = azurerm_subnet.pflex_bastion_subnet[0].id
+    subnet_id            = [for output in azurerm_virtual_network.pflex_network.subnet[*] : output.id if output.name == var.bastion_subnet.name][0]
     public_ip_address_id = azurerm_public_ip.bastion_public_ip[0].id
   }
 }
@@ -143,7 +235,7 @@ resource "azurerm_network_interface" "jumphost_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = [for output in azurerm_virtual_network.pflex_network.subnet[*] : output.id if output.name == var.subnets[0].name][0]
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -182,7 +274,7 @@ resource "azurerm_network_interface" "sqlvm_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = [for output in azurerm_virtual_network.pflex_network.subnet[*] : output.id if output.name == var.subnets[0].name][0]
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -256,7 +348,7 @@ resource "azurerm_network_interface" "storage_instance_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = [for output in azurerm_virtual_network.pflex_network.subnet[*] : output.id if output.name == var.subnets[0].name][0]
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -364,7 +456,7 @@ resource "azurerm_network_interface" "installer_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = [for output in azurerm_virtual_network.pflex_network.subnet[*] : output.id if output.name == var.subnets[0].name][0]
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -495,7 +587,7 @@ resource "azurerm_lb" "load_balancer" {
     name                          = "${var.prefix}-lb-ip"
     private_ip_address_allocation = "Static"
     private_ip_address            = var.pfmp_lb_ip
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = [for output in azurerm_virtual_network.pflex_network.subnet[*] : output.id if output.name == var.subnets[0].name][0]
     zones                         = local.availability_zones
   }
 }
